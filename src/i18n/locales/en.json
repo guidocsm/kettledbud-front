@@ -1,0 +1,13 @@
+{
+  "INIT": {
+    "SUBTITLE": "Your gym buddy. Learn, train, and progress.",
+    "START": "Let's go!",
+    "LOGIN": "I already have an account"
+  },
+  "WELCOME": {
+    "GREETING": "Hi!, I'm <bold>Kettlebi</bold>, your new gym buddy.",
+    "DESCRIPTION": "I'll ask you a few quick questions to build your training plan.",
+    "DURATION": "It's only 2 minutes.",
+    "CONTINUE": "Let's go!"
+  }
+}
