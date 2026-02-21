@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.main,
   },
   outline: {
-    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.main,
   },

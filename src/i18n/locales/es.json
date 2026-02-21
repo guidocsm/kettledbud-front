@@ -1,0 +1,15 @@
+{
+  "COMMON": {
+    "KETTLEBI": "Kettlebi",
+    "GO": "¡Vamos!"
+  },
+  "INIT": {
+    "SUBTITLE": "Tu gym buddy. Aprende, entrena y progresa.",
+    "LOGIN_BUTTON": "Ya tengo cuenta"
+  },
+  "WELCOME": {
+    "GREETING": "¡Hola!, soy <bold>Kettlebi</bold>, tu nuevo compañero de gym.",
+    "DESCRIPTION": "Voy a hacerte unas preguntas rápidas para armar tu plan de entrenamiento.",
+    "DURATION": "Son solo 2 minutos."
+  }
+}

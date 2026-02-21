@@ -1,10 +1,14 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
+import { Trans, useTranslation } from 'react-i18next'
 import { BackButton } from '@/src/components/BackButton'
 import { SpeechBubble } from '@/src/components/SpeechBubble'
 import { Button } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import { translationComponents } from '@/src/i18n/translationComponents'
 
 export function WelcomeScreen() {
+  const { t } = useTranslation()
+
   return (
     <View style={styles.container}>
       <BackButton />
@@ -16,12 +20,17 @@ export function WelcomeScreen() {
           width={283}
         >
           <CustomText>
-            Hola, soy <CustomText fontWeight={700}>Kettle</CustomText>, tu nuevo compañero de gym.
+            <Trans
+              i18nKey="WELCOME.GREETING"
+              components={translationComponents}
+            />
           </CustomText>
           <CustomText>
-            Necesito conocerte un poco para preparar tu plan personalizado.
+            {t('WELCOME.DESCRIPTION')}
           </CustomText>
-          <CustomText>Son solo 2 minutos.</CustomText>
+          <CustomText>
+            {t('WELCOME.DURATION')}
+          </CustomText>
         </SpeechBubble>
         <Image
           source={require('../../../assets/images/kettlebud-logo.png')}
@@ -29,9 +38,8 @@ export function WelcomeScreen() {
           resizeMode="contain"
         />
       </View>
-
       <Button
-        text="Continuar"
+        text={t('COMMON.GO')}
         onPress={() => console.log('Continuar presionado')}
       />
     </View>

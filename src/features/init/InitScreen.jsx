@@ -3,9 +3,11 @@ import CustomText from "@/src/components/CustomText"
 import { colors } from "@/src/constants/theme"
 import { Button } from "@/src/components/Button"
 import { useRouter } from "expo-router"
+import { useTranslation } from "react-i18next"
 
 function InitScreen() {
   const router = useRouter()
+  const { t } = useTranslation()
 
   return (
     <View style={styles.container}>
@@ -16,7 +18,7 @@ function InitScreen() {
         source={require('../../../assets/images/kettlebud.png')}
       />
       <CustomText
-        text="La forma gratuita, divertida y efectiva de crear hábitos y un estilo de vida mejor."
+        text={t('INIT.SUBTITLE')}
         lineHeight={26}
         color={colors.darkLight}
         textAlign="center"
@@ -24,7 +26,7 @@ function InitScreen() {
       />
       <View style={styles.buttonContainer}>
         <Button
-          text="Empecemos"
+          text={t('COMMON.GO')}
           onPress={() => router.push('/welcome')}
           style={styles.button}
         />

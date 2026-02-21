@@ -1,3 +1,4 @@
+import '@/src/i18n'
 import { Stack } from 'expo-router'
 import { StyleSheet } from 'react-native'
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -18,8 +19,8 @@ export default function RootLayout() {
           contentStyle: [
             styles.screenContent,
             {
-              paddingTop: insets.top + 50,
-              paddingBottom: insets.bottom + 50,
+              paddingTop: insets.top + 30,
+              paddingBottom: insets.bottom,
               paddingLeft: insets.left + 30,
               paddingRight: insets.right + 30,
             },
