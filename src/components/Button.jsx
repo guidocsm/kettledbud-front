@@ -19,7 +19,7 @@ export function Button({
       <CustomText
         text={text}
         color={type === 'disabled' ? `${textColor}80` : textColor}
-        fontWeight={600}
+        fontWeight={700}
         fontSize={16}
         textAlign="center"
       />

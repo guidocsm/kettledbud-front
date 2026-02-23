@@ -15,14 +15,6 @@
     "DURATION": "Son solo 2 minutos."
   },
   "ONBOARDING": {
-    "GOAL": {
-      "QUESTION": "¿Qué te gustaría conseguir?",
-      "OPTIONS": {
-        "LOSE_WEIGHT": { "TITLE": "Perder peso", "DESCRIPTION": "Quemar grasa y definir." },
-        "BUILD_MUSCLE": { "TITLE": "Ganar músculo", "DESCRIPTION": "Aumentar masa muscular." },
-        "GET_FITTER": { "TITLE": "Mejorar condición", "DESCRIPTION": "Más resistencia y energía." }
-      }
-    },
     "BRIDGE": {
       "DESCRIPTION": "¡Casi listo! Ahora necesito saber un poco más sobre ti para afinar tu rutina al máximo. <bold>Algunos datos son opcionales</bold>, comparte solo lo que quieras."
     }
