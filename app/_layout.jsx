@@ -5,7 +5,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-cont
 import { useAppFonts } from '@/src/hooks/useAppFonts'
 import { colors } from '../src/constants/theme'
 
-export default function RootLayout() {
+export default function IndexLayout() {
   const { fontsLoaded, fontError } = useAppFonts()
   const insets = useSafeAreaInsets()
 
@@ -30,6 +30,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="init" />
         <Stack.Screen name="welcome" />
+        <Stack.Screen name="onboarding" />
       </Stack>
     </SafeAreaProvider>
   )

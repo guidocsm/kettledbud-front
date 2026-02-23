@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "checkJs": false
+  },
+  "include": ["app/**/*", "src/**/*", "assets/**/*"],
+  "exclude": ["node_modules", "babel.config.js"]
+}

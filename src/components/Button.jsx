@@ -4,19 +4,21 @@ import { StyleSheet, TouchableOpacity } from "react-native"
 
 export function Button({
   type = 'main',
-  textColor = colors.white,
+  textColor = colors.dark,
   text = '',
   style = {},
+  disabled = false,
   onPress,
 }) {
   return (
     <TouchableOpacity
       style={[styles.button, styles[type], style]}
       onPress={onPress}
+      disabled={type === 'disabled'}
     >
       <CustomText
         text={text}
-        color={textColor}
+        color={type === 'disabled' ? `${textColor}80` : textColor}
         fontWeight={600}
         fontSize={16}
         textAlign="center"
@@ -38,5 +40,8 @@ const styles = StyleSheet.create({
   outline: {
     borderWidth: 1,
     borderColor: colors.main,
+  },
+  disabled: {
+    backgroundColor: `${colors.main}80`,
   },
 })

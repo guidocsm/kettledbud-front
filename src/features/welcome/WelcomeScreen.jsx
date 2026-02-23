@@ -1,37 +1,35 @@
 import { Image, StyleSheet, View } from 'react-native'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { BackButton } from '@/src/components/BackButton'
-import { SpeechBubble } from '@/src/components/SpeechBubble'
+import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { Button } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
-import { translationComponents } from '@/src/i18n/translationComponents'
+import { renderTranslation } from '@/src/i18n/translationComponents'
+import { useRouter } from 'expo-router'
+import { colors } from '@/src/constants/theme'
 
 export function WelcomeScreen() {
   const { t } = useTranslation()
+  const router = useRouter()
 
   return (
     <View style={styles.container}>
       <BackButton />
       <View style={styles.content}>
-        <SpeechBubble
-          arrowDirection="down"
-          animated={true}
-          animationDuration={3}
+        <TypewriterBubble
+          arrowDirection="bottom"
           width={283}
         >
-          <CustomText>
-            <Trans
-              i18nKey="WELCOME.GREETING"
-              components={translationComponents}
-            />
+          <CustomText color={colors.dark}>
+            {renderTranslation(t('WELCOME.GREETING'))}
           </CustomText>
-          <CustomText>
+          <CustomText color={colors.dark}>
             {t('WELCOME.DESCRIPTION')}
           </CustomText>
-          <CustomText>
+          <CustomText color={colors.dark}>
             {t('WELCOME.DURATION')}
           </CustomText>
-        </SpeechBubble>
+        </TypewriterBubble>
         <Image
           source={require('../../../assets/images/kettlebud-logo.png')}
           style={styles.mascot}
@@ -40,7 +38,7 @@ export function WelcomeScreen() {
       </View>
       <Button
         text={t('COMMON.GO')}
-        onPress={() => console.log('Continuar presionado')}
+        onPress={() => router.push('/onboarding/goal')}
       />
     </View>
   )
