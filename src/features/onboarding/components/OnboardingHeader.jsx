@@ -17,6 +17,7 @@ export function OnboardingHeader() {
   const currentStepIndex = STEP_CONFIG.findIndex(step => step.slug === slug)
   const currentStep = STEP_CONFIG[currentStepIndex] ?? STEP_CONFIG[0]
   const wasFilled = onboardingState.hasOwnProperty(slug) && onboardingState[slug]
+
   return (
     <View style={styles.header}>
       <BackButton />

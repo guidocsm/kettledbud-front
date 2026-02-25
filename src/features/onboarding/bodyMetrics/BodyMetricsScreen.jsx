@@ -62,7 +62,7 @@ export default function BodyMetricsScreen() {
         text={t('COMMON.CONTINUE')}
         type={canContinue ? 'main' : 'disabled'}
         onPress={() => {
-          router.push('/onboarding/injury')
+          router.push('/onboarding/injuries')
         }}
       />
     </View>

@@ -24,6 +24,8 @@ export default function OnboardingLayout() {
           <Stack.Screen name="gender" />
           <Stack.Screen name="birthday" />
           <Stack.Screen name="bodyMetrics" />
+          <Stack.Screen name="injuries" />
+          <Stack.Screen name="summary" />
         </Stack>
       </View>
     </OnboardingProvider>

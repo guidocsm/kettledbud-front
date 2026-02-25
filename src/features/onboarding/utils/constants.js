@@ -42,7 +42,7 @@ export const STEP_CONFIG = [
     speech: '¿Cuánto mides y cuánto pesas?',
   },
   {
-    slug: 'injury',
+    slug: 'injuries',
     speech: '¿Tienes alguna lesión o molestia?',
   },
 ]
@@ -146,6 +146,28 @@ export const ONBOARDING = {
       title: 'Prefiero no decirlo',
       icon: LineIcon,
       slug: 'other',
+    },
+  ],
+  INJURIES: [
+    {
+      title: 'Hombro',
+      slug: 'shoulder',
+    },
+    {
+      title: 'Espalda baja',
+      slug: 'lowBack',
+    },
+    {
+      title: 'Rodillas',
+      slug: 'knees',
+    },
+    {
+      title: 'Muñecas',
+      slug: 'wrists',
+    },
+    {
+      title: 'Ninguna',
+      slug: '',
     },
   ],
 }

@@ -31,6 +31,12 @@
         "UNIT": "kg"
       },
       "DISCLAIMER": "Con esto puedo calcular tu progreso real y sugerirte pesos de inicio seguros."
+    },
+    "INJURIES": {
+      "FIELD": {
+        "LABEL": "Indica si tienes otra lesión o molestia",
+        "PLACEHOLDER": "Tobillo, cadera..."
+      }
     }
   }
 }
