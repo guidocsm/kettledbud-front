@@ -16,16 +16,6 @@ export function BodyWeightPicker({ initialWeight, unit: initialUnit = UNIT_WEIGH
 
   return (
     <View style={styles.container}>
-      <CustomText
-        text="PESO"
-        fontFamily={fontDisplay}
-        fontWeight={700}
-        fontSize={14}
-        color={colors.white}
-        textAlign="center"
-        extraStyle={{ alignSelf: 'center' }}
-      />
-
       <View style={styles.toggle}>
         <Pressable
           style={[styles.toggleBtn, unit === UNIT_WEIGHT_KG && styles.toggleBtnActive]}
@@ -34,7 +24,7 @@ export function BodyWeightPicker({ initialWeight, unit: initialUnit = UNIT_WEIGH
           <CustomText
             text={UNIT_WEIGHT_KG}
             fontWeight={600}
-            fontSize={13}
+            fontSize={16}
             color={unit === UNIT_WEIGHT_KG ? colors.main : colors.whiteLight}
             textAlign="center"
           />
@@ -46,7 +36,7 @@ export function BodyWeightPicker({ initialWeight, unit: initialUnit = UNIT_WEIGH
           <CustomText
             text={UNIT_WEIGHT_LB}
             fontWeight={600}
-            fontSize={13}
+            fontSize={16}
             color={unit === UNIT_WEIGHT_LB ? colors.main : colors.whiteLight}
             textAlign="center"
           />
@@ -78,15 +68,22 @@ const styles = StyleSheet.create({
   },
   toggle: {
     flexDirection: 'row',
-    alignSelf: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderWidth: 1.5,
     borderColor: colors.main,
     borderRadius: 20,
+    height: 40,
     overflow: 'hidden',
+    width: '100%',
   },
   toggleBtn: {
     paddingVertical: 4,
     paddingHorizontal: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    height: '100%',
   },
   toggleBtnActive: {
     backgroundColor: colors.mainLight,

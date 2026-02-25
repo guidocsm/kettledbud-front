@@ -21,16 +21,6 @@ export function BodyHeightPicker({ initialHeight, unit: initialUnit = UNIT_HEIGH
 
   return (
     <View style={styles.container}>
-      <CustomText
-        text="ALTURA"
-        fontFamily={fontDisplay}
-        fontWeight={700}
-        fontSize={14}
-        color={colors.white}
-        textAlign="center"
-        extraStyle={{ alignSelf: 'center' }}
-      />
-
       <View style={styles.toggle}>
         <Pressable
           style={[styles.toggleBtn, unit === UNIT_HEIGHT_CM && styles.toggleBtnActive]}
@@ -39,7 +29,7 @@ export function BodyHeightPicker({ initialHeight, unit: initialUnit = UNIT_HEIGH
           <CustomText
             text={UNIT_HEIGHT_CM}
             fontWeight={600}
-            fontSize={13}
+            fontSize={16}
             color={unit === UNIT_HEIGHT_CM ? colors.main : colors.whiteLight}
             textAlign="center"
           />
@@ -51,13 +41,12 @@ export function BodyHeightPicker({ initialHeight, unit: initialUnit = UNIT_HEIGH
           <CustomText
             text={UNIT_HEIGHT_FT}
             fontWeight={600}
-            fontSize={13}
+            fontSize={16}
             color={unit === UNIT_HEIGHT_FT ? colors.main : colors.whiteLight}
             textAlign="center"
           />
         </Pressable>
       </View>
-
       <View style={styles.pickerWrap}>
         {unit === UNIT_HEIGHT_CM ? (
           <Picker
@@ -98,15 +87,22 @@ const styles = StyleSheet.create({
   },
   toggle: {
     flexDirection: 'row',
-    alignSelf: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderWidth: 1.5,
     borderColor: colors.main,
     borderRadius: 20,
+    height: 40,
     overflow: 'hidden',
+    width: '100%',
   },
   toggleBtn: {
     paddingVertical: 4,
     paddingHorizontal: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    height: '100%',
   },
   toggleBtnActive: {
     backgroundColor: colors.mainLight,
@@ -114,7 +110,7 @@ const styles = StyleSheet.create({
   pickerWrap: {
     borderWidth: 2,
     borderColor: colors.main,
-    borderRadius: 16,
+    borderRadius: 20,
     overflow: 'hidden',
   },
   picker: {
