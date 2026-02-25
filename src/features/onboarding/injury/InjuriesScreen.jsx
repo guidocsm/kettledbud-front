@@ -7,6 +7,7 @@ import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { useRouter } from 'expo-router'
 import { InjuriesCard } from './components/InjuriesCard'
 import { Button } from '@/src/components/Button'
+import CustomText from '@/src/components/CustomText'
 
 export default function InjuriesScreen() {
   const { t } = useTranslation()
@@ -36,15 +37,24 @@ export default function InjuriesScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        {ONBOARDING.INJURIES.map((injury) => (
-          <InjuriesCard
-            key={injury.slug}
-            injury={injury.title}
-            onPress={() => handlePress(injury.slug)}
-            selected={onboardingState?.injuries?.includes(injury.slug)}
-          />
-        ))}
+      <View style={styles.contentContainer}>
+        <View style={styles.content}>
+          {ONBOARDING.INJURIES.map((injury, index) => (
+            <InjuriesCard
+              key={index}
+              injury={injury.title}
+              onPress={() => handlePress(injury.slug)}
+              selected={onboardingState?.injuries?.includes(injury.slug)}
+            />
+          ))}
+        </View>
+        <CustomText
+          text="KettleBuddy no sustituye el consejo médico profesional. Si tienes alguna condición de salud, consulta con tu médico antes de empezar."
+          color={colors.whiteLight}
+          fontSize={14}
+          fontWeight={400}
+          lineHeight={24}
+        />
       </View>
       <Button
         text={t('COMMON.CONTINUE')}
@@ -59,6 +69,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  contentContainer: {
+    gap: 20,
   },
   content: {
     flexDirection: 'row',

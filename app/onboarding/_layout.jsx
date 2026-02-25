@@ -7,14 +7,17 @@ import { OnboardingHeader } from '@/src/features/onboarding/components/Onboardin
 export default function OnboardingLayout() {
   const pathname = usePathname()
 
+  const showHeader = pathname !== '/onboarding/bridge' && pathname !== '/onboarding/summary'
+
   return (
     <OnboardingProvider>
       <View style={styles.container}>
-        {pathname !== '/onboarding/bridge' && <OnboardingHeader />}
+        {showHeader && <OnboardingHeader />}
         <Stack
           screenOptions={{
             headerShown: false,
             contentStyle: styles.screenContent,
+            animation: "none"
           }}
         >
           <Stack.Screen name="goal" />

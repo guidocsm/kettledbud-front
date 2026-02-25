@@ -22,9 +22,9 @@ export function OnboardingProvider({ children }) {
 }
 
 export function useOnboarding() {
-  const ctx = useContext(OnboardingContext)
-  if (!ctx) {
+  const context = useContext(OnboardingContext)
+  if (!context) {
     throw new Error('useOnboarding must be used within OnboardingProvider')
   }
-  return ctx
+  return context
 }

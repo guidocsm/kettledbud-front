@@ -25,6 +25,7 @@ export default function IndexLayout() {
               paddingRight: insets.right + 30,
             },
           ],
+          animation: 'none',
         }}
       >
         <Stack.Screen name="index" />
