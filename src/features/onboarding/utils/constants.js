@@ -7,6 +7,9 @@ import {
   MuscleIcon,
   ThunderIcon,
   ClockIcon,
+  MaleIcon,
+  FemaleIcon,
+  LineIcon,
 } from '@/assets/Icons'
 
 export const STEP_CONFIG = [
@@ -27,19 +30,19 @@ export const STEP_CONFIG = [
     speech: '¿Cuánto tiempo tienes para entrenar?',
   },
   {
-    slug: 'level',
+    slug: 'gender',
     speech: '¿Cómo te identificas?',
   },
   {
-    slug: 'preferences',
+    slug: 'birthday',
     speech: '¿Cuándo es tu cumpleaños?',
   },
   {
-    slug: 'summary',
+    slug: 'heightWeight',
     speech: '¿Cuánto mides y cuánto pesas?',
   },
   {
-    slug: 'summary',
+    slug: 'injury',
     speech: '¿Tienes alguna lesión o molestia?',
   },
 ]
@@ -126,6 +129,23 @@ export const ONBOARDING = {
       description: 'Con calma, sin mirar el reloj',
       icon: ClockIcon,
       slug: 'high',
+    },
+  ],
+  GENDER: [
+    {
+      title: 'Hombre',
+      icon: MaleIcon,
+      slug: 'male',
+    },
+    {
+      title: 'Mujer',
+      icon: FemaleIcon,
+      slug: 'female',
+    },
+    {
+      title: 'Prefiero no decirlo',
+      icon: LineIcon,
+      slug: 'other',
     },
   ],
 }

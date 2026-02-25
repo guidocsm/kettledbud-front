@@ -83,5 +83,31 @@ export function ClockIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
   )
 }
 
+export function FemaleIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 20" fill="none">
+      <Path d="M10 13.125C13.2792 13.125 15.9375 10.4667 15.9375 7.1875C15.9375 3.90831 13.2792 1.25 10 1.25C6.72081 1.25 4.0625 3.90831 4.0625 7.1875C4.0625 10.4667 6.72081 13.125 10 13.125Z" stroke={color} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <Path d="M10 13.125V18.75M12.2656 16.25H7.73438" stroke={color} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </Svg>
+  )
+}
+
+export function MaleIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 20" fill="none">
+      <Path d="M8.4375 17.5C11.7167 17.5 14.375 14.8417 14.375 11.5625C14.375 8.28331 11.7167 5.625 8.4375 5.625C5.15831 5.625 2.5 8.28331 2.5 11.5625C2.5 14.8417 5.15831 17.5 8.4375 17.5Z" stroke={color} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <Path d="M17.5 6.25V2.5M17.5 2.5H13.75M17.5 2.5L12.6562 7.34375" stroke={color} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </Svg>
+  )
+}
+
+export function LineIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 20" fill="none">
+      <Path d="M3.3335 10.0001C3.3335 9.77907 3.42129 9.56711 3.57757 9.41083C3.73385 9.25455 3.94582 9.16675 4.16683 9.16675H15.8335C16.0545 9.16675 16.2665 9.25455 16.4228 9.41083C16.579 9.56711 16.6668 9.77907 16.6668 10.0001C16.6668 10.2211 16.579 10.4331 16.4228 10.5893C16.2665 10.7456 16.0545 10.8334 15.8335 10.8334H4.16683C3.94582 10.8334 3.73385 10.7456 3.57757 10.5893C3.42129 10.4331 3.3335 10.2211 3.3335 10.0001Z" fill={color} />
+    </Svg>
+  )
+}
+
 
 

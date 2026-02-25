@@ -7,13 +7,16 @@ import { Image } from "react-native"
 import { TypewriterBubble } from "@/src/components/TypewriterBubble"
 import CustomText from "@/src/components/CustomText"
 import { colors } from "@/src/constants/theme"
+import { useOnboarding } from "@/src/contexts/OnboardingContext"
 
 export function OnboardingHeader() {
   const pathname = usePathname()
-  const slug = pathname?.replace(/^\/onboarding\/?/, '').split('/')[0] || 'goal'
+  const { onboardingState } = useOnboarding()
+
+  const slug = pathname?.replace(/^\/onboarding\/?/, '').split('/')[0] || ''
   const currentStepIndex = STEP_CONFIG.findIndex(step => step.slug === slug)
   const currentStep = STEP_CONFIG[currentStepIndex] ?? STEP_CONFIG[0]
-
+  const wasFilled = onboardingState.hasOwnProperty(slug) && onboardingState[slug]
   return (
     <View style={styles.header}>
       <BackButton />
@@ -29,7 +32,10 @@ export function OnboardingHeader() {
           width={80}
           height={80}
         />
-        <TypewriterBubble arrowDirection="left">
+        <TypewriterBubble
+          arrowDirection="left"
+          animated={!wasFilled}
+        >
           <CustomText
             fontSize={16}
             fontWeight={600}

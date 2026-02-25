@@ -18,13 +18,15 @@ export function OnboardingCard({ icon, title, description, selectedCard, onPress
         >
           {title}
         </CustomText>
-        <CustomText
-          fontWeight={400}
-          fontSize={14}
-          color={selectedCard ? colors.darkLight : colors.whiteLight}
-        >
-          {description}
-        </CustomText>
+        {description && (
+          <CustomText
+            fontWeight={400}
+            fontSize={14}
+            color={selectedCard ? colors.darkLight : colors.whiteLight}
+          >
+            {description}
+          </CustomText>
+        )}
       </View>
     </TouchableOpacity>
   )
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexShrink: 1,
     gap: 10,
+    justifyContent: 'center',
   },
   selectedCard: {
     backgroundColor: colors.main,

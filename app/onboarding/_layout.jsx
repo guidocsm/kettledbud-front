@@ -18,6 +18,11 @@ export default function OnboardingLayout() {
           }}
         >
           <Stack.Screen name="goal" />
+          <Stack.Screen name="experience" />
+          <Stack.Screen name="workoutPerWeek" />
+          <Stack.Screen name="timePerWorkout" />
+          <Stack.Screen name="gender" />
+          <Stack.Screen name="birthday" />
         </Stack>
       </View>
     </OnboardingProvider>

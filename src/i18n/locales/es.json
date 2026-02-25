@@ -17,6 +17,12 @@
   "ONBOARDING": {
     "BRIDGE": {
       "DESCRIPTION": "¡Casi listo! Ahora necesito saber un poco más sobre ti para afinar tu rutina al máximo. <bold>Algunos datos son opcionales</bold>, comparte solo lo que quieras."
+    },
+    "BIRTHDAY": {
+      "DISCLAIMER": "Tu edad me ayuda a adaptar la intensidad del plan."
+    },
+    "HEIGHT_WEIGHT": {
+      "DISCLAIMER": "Con esto puedo calcular tu progreso real y sugerirte pesos de inicio seguros."
     }
   }
 }
