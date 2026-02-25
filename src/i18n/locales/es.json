@@ -21,7 +21,15 @@
     "BIRTHDAY": {
       "DISCLAIMER": "Tu edad me ayuda a adaptar la intensidad del plan."
     },
-    "HEIGHT_WEIGHT": {
+    "BODY_METRICS": {
+      "HEIGHT": {
+        "TITLE": "Altura",
+        "UNIT": "cm"
+      },
+      "WEIGHT": {
+        "TITLE": "Peso",
+        "UNIT": "kg"
+      },
       "DISCLAIMER": "Con esto puedo calcular tu progreso real y sugerirte pesos de inicio seguros."
     }
   }

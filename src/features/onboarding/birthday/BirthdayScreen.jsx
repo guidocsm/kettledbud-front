@@ -34,7 +34,7 @@ export default function BirthdayScreen() {
         text={t('COMMON.CONTINUE')}
         type={onboardingState?.birthday ? 'main' : 'disabled'}
         onPress={() => {
-          router.push('/onboarding/height-weight')
+          router.push('/onboarding/bodyMetrics')
         }}
       />
     </View>

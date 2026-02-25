@@ -38,7 +38,7 @@ export const STEP_CONFIG = [
     speech: '¿Cuándo es tu cumpleaños?',
   },
   {
-    slug: 'heightWeight',
+    slug: 'bodyMetrics',
     speech: '¿Cuánto mides y cuánto pesas?',
   },
   {
