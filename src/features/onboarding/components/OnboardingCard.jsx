@@ -11,7 +11,7 @@ export function OnboardingCard({ icon, title, description, selectedCard, onPress
       <View style={[styles.iconSlot, selectedCard && styles.selectedIconSlot]}>{icon}</View>
       <View style={styles.textBlock}>
         <CustomText
-          fontWeight={600}
+          fontWeight={selectedCard ? 700 : 600}
           fontSize={18}
           extraStyle={styles.title}
           color={selectedCard ? colors.dark : colors.white}

@@ -78,15 +78,17 @@ export const ONBOARDING = {
     },
     {
       title: 'Volví a empezar',
-      description: 'Entrené antes pero lo dejé',
+      description: 'Entrené antes, pero lo dejé',
       icon: CycleIcon,
-      slug: 'restart',
+      slug: 'returning',
+      followUp: '¿Has entrenado más de 6 meses?',
     },
     {
       title: 'Ya entreno',
       description: 'Voy al gym regularmente',
       icon: MuscleIcon,
-      slug: 'experienced',
+      slug: 'active',
+      followUp: '¿Llevas entrenando más de 6 meses?',
     },
   ],
   WORKOUT_PER_WEEK: [
