@@ -20,7 +20,7 @@ function InitScreen() {
       <CustomText
         text={t('INIT.SUBTITLE')}
         lineHeight={26}
-        color={colors.darkLight}
+        color={colors.whiteLight}
         textAlign="center"
         fontWeight={500}
       />

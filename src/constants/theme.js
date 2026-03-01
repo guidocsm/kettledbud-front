@@ -1,11 +1,12 @@
 export const colors = {
   border: '#DADADA',
   dark: '#1A1A1A',
-  darkLight: '#6B7280',
-  main: '#0A7A70',
-  mainLight: '#0A7A7033',
-  mainBackground: '#E8F4F1',
+  darkLight: '#000000B3',
+  main: '#F5A623',
+  mainLight: '#F5A62333',
+  mainBackground: '#18181B',
   white: '#FFFFFF',
+  whiteLight: '#FFFFFFB3',
 }
 
 export const fontWeights = [300, 400, 500, 600, 700, 800, 900]

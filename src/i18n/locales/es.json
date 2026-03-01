@@ -1,7 +1,9 @@
 {
   "COMMON": {
     "KETTLEBI": "Kettlebi",
-    "GO": "¡Vamos!"
+    "GO": "¡Vamos!",
+    "CONTINUE": "Continuar",
+    "DAYS_PER_WEEK": "días por semana"
   },
   "INIT": {
     "SUBTITLE": "Tu gym buddy. Aprende, entrena y progresa.",
@@ -11,5 +13,30 @@
     "GREETING": "¡Hola!, soy <bold>Kettlebi</bold>, tu nuevo compañero de gym.",
     "DESCRIPTION": "Voy a hacerte unas preguntas rápidas para armar tu plan de entrenamiento.",
     "DURATION": "Son solo 2 minutos."
+  },
+  "ONBOARDING": {
+    "BRIDGE": {
+      "DESCRIPTION": "¡Casi listo! Ahora necesito saber un poco más sobre ti para afinar tu rutina al máximo. <bold>Algunos datos son opcionales</bold>, comparte solo lo que quieras."
+    },
+    "BIRTHDAY": {
+      "DISCLAIMER": "Tu edad me ayuda a adaptar la intensidad del plan."
+    },
+    "BODY_METRICS": {
+      "HEIGHT": {
+        "TITLE": "Altura",
+        "UNIT": "cm"
+      },
+      "WEIGHT": {
+        "TITLE": "Peso",
+        "UNIT": "kg"
+      },
+      "DISCLAIMER": "Con esto puedo calcular tu progreso real y sugerirte pesos de inicio seguros."
+    },
+    "INJURIES": {
+      "FIELD": {
+        "LABEL": "Indica si tienes otra lesión o molestia",
+        "PLACEHOLDER": "Tobillo, cadera..."
+      }
+    }
   }
 }
