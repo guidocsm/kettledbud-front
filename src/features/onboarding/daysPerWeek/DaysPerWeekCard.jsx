@@ -1,8 +1,9 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 
-export function WorkoutPerWeekCard({ value, onPress, selectedCard }) {
+export function DaysPerWeekCard({ value, onPress, selectedCard }) {
   return (
     <TouchableOpacity
       style={[styles.card, selectedCard && styles.selectedCard]}

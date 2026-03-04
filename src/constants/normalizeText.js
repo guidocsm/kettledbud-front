@@ -1,4 +1,4 @@
-import { Dimensions, PixelRatio } from "react-native"
+import { Dimensions, PixelRatio } from 'react-native'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const scale = SCREEN_WIDTH / 375 // 375px iPhone 11 base

@@ -1,14 +1,17 @@
 import { Stack, usePathname } from 'expo-router'
 import { StyleSheet, View } from 'react-native'
-import { OnboardingProvider } from '@/src/contexts/OnboardingContext'
+
 import { colors } from '@/src/constants/theme'
+import { OnboardingProvider } from '@/src/contexts/OnboardingContext'
 import { OnboardingHeader } from '@/src/features/onboarding/components/OnboardingHeader'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
+
+const headlessRoutes = [ROUTES_NAMES.BRIDGE, ROUTES_NAMES.SUMMARY, ROUTES_NAMES.WELCOME, ROUTES_NAMES.PREPARING_PLAN]
 
 export default function OnboardingLayout() {
   const pathname = usePathname()
-
-  const showHeader = pathname !== '/onboarding/bridge' && pathname !== '/onboarding/summary'
-
+  const showHeader = !headlessRoutes.includes(pathname)
+  
   return (
     <OnboardingProvider>
       <View style={styles.container}>
@@ -17,15 +20,17 @@ export default function OnboardingLayout() {
           screenOptions={{
             headerShown: false,
             contentStyle: styles.screenContent,
-            animation: "none"
+            animation: 'none'
           }}
         >
+          <Stack.Screen name="welcome" />
           <Stack.Screen name="goal" />
           <Stack.Screen name="experience" />
-          <Stack.Screen name="workoutPerWeek" />
-          <Stack.Screen name="timePerWorkout" />
+          <Stack.Screen name="daysPerWeek" />
+          <Stack.Screen name="timePerSession" />
+          <Stack.Screen name="bridge" />
           <Stack.Screen name="gender" />
-          <Stack.Screen name="birthday" />
+          <Stack.Screen name="birthDate" />
           <Stack.Screen name="bodyMetrics" />
           <Stack.Screen name="injuries" />
           <Stack.Screen name="summary" />

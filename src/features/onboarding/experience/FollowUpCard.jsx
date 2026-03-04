@@ -1,4 +1,5 @@
 import { StyleSheet, TouchableOpacity } from 'react-native'
+
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 

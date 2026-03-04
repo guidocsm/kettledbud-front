@@ -1,9 +1,11 @@
-import { Image, StyleSheet, View } from "react-native"
-import CustomText from "@/src/components/CustomText"
-import { colors } from "@/src/constants/theme"
-import { Button } from "@/src/components/Button"
-import { useRouter } from "expo-router"
-import { useTranslation } from "react-i18next"
+import { useRouter } from 'expo-router'
+import { useTranslation } from 'react-i18next'
+import { Image, StyleSheet, View } from 'react-native'
+
+import { Button } from '@/src/components/Button'
+import CustomText from '@/src/components/CustomText'
+import { colors } from '@/src/constants/theme'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 function InitScreen() {
   const router = useRouter()
@@ -12,10 +14,10 @@ function InitScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../../assets/images/kettlebud-logo.png')}
+        source={require('@/assets/images/kettlebud-logo.png')}
       />
       <Image
-        source={require('../../../assets/images/kettlebud.png')}
+        source={require('@/assets/images/kettlebud.png')}
       />
       <CustomText
         text={t('INIT.SUBTITLE')}
@@ -27,7 +29,7 @@ function InitScreen() {
       <View style={styles.buttonContainer}>
         <Button
           text={t('COMMON.GO')}
-          onPress={() => router.push('/welcome')}
+          onPress={() => router.push(ROUTES_NAMES.WELCOME)}
           style={styles.button}
         />
         <Button

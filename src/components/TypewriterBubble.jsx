@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { colors } from "../constants/theme";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
+
+import { colors } from '../constants/theme'
 
 /**
  * TypewriterBubble
@@ -43,46 +44,46 @@ import { colors } from "../constants/theme";
 //   shadow: "#000000",
 // };
 
-const ARROW_SIZE = 14;
-const ARROW_FILL_SIZE = 12;
-const BORDER_WIDTH = 2;
-const BORDER_RADIUS = 20;
+const ARROW_SIZE = 14
+const ARROW_FILL_SIZE = 12
+const BORDER_WIDTH = 2
+const BORDER_RADIUS = 20
 
 const DEFAULTS = {
   animated: true,
   width: 240,
-  direction: "left",
+  direction: 'left',
   speed: 40,
   childrenGap: 15,
-};
+}
 
 // ─── Utilidad: extraer texto plano de un nodo (recursivo) ──────────────
 function extractText(node) {
-  if (typeof node === "string") return node;
-  if (typeof node === "number") return String(node);
-  if (!node) return "";
-  if (Array.isArray(node)) return node.map(extractText).join("");
-  if (node.props?.children != null) return extractText(node.props.children);
-  return "";
+  if (typeof node === 'string') return node
+  if (typeof node === 'number') return String(node)
+  if (!node) return ''
+  if (Array.isArray(node)) return node.map(extractText).join('')
+  if (node.props?.children != null) return extractText(node.props.children)
+  return ''
 }
 
 // ─── Utilidad: clonar un elemento React reemplazando su texto ──────────
 // Recorre recursivamente el árbol JSX hasta encontrar el nodo de texto
 // más profundo y lo reemplaza con `newText`.
 function cloneWithText(element, newText) {
-  if (typeof element === "string" || typeof element === "number") {
-    return newText;
+  if (typeof element === 'string' || typeof element === 'number') {
+    return newText
   }
-  if (!React.isValidElement(element)) return newText;
+  if (!React.isValidElement(element)) return newText
 
-  const { children: originalChildren, ...restProps } = element.props;
+  const { children: originalChildren, ...restProps } = element.props
 
   // Si el children directo es texto plano → reemplazar
   if (
-    typeof originalChildren === "string" ||
-    typeof originalChildren === "number"
+    typeof originalChildren === 'string' ||
+    typeof originalChildren === 'number'
   ) {
-    return React.cloneElement(element, restProps, newText);
+    return React.cloneElement(element, restProps, newText)
   }
 
   // Si es un solo elemento hijo → recurrir
@@ -91,25 +92,25 @@ function cloneWithText(element, newText) {
       element,
       restProps,
       cloneWithText(originalChildren, newText)
-    );
+    )
   }
 
   // Si es un array de children → distribuir texto proporcionalmente
   if (Array.isArray(originalChildren)) {
-    let consumed = 0;
+    let consumed = 0
     const mapped = originalChildren.map((child) => {
-      const childFullText = extractText(child);
-      const remaining = newText.length - consumed;
-      if (remaining <= 0) return cloneWithText(child, "");
-      const slice = newText.slice(consumed, consumed + childFullText.length);
-      consumed += childFullText.length;
-      return cloneWithText(child, slice);
-    });
-    return React.cloneElement(element, restProps, ...mapped);
+      const childFullText = extractText(child)
+      const remaining = newText.length - consumed
+      if (remaining <= 0) return cloneWithText(child, '')
+      const slice = newText.slice(consumed, consumed + childFullText.length)
+      consumed += childFullText.length
+      return cloneWithText(child, slice)
+    })
+    return React.cloneElement(element, restProps, ...mapped)
   }
 
   // Fallback
-  return React.cloneElement(element, restProps, newText);
+  return React.cloneElement(element, restProps, newText)
 }
 
 // ─── Componente ────────────────────────────────────────────────────────
@@ -129,106 +130,114 @@ export function TypewriterBubble({
   const childArray = useMemo(
     () => React.Children.toArray(children),
     [children]
-  );
+  )
 
   // ─── Precalcular mapa de rangos acumulados ───────────────────────────
   // Cada child → { element, text, start, end }
   // start/end = índices en el "string total virtual" concatenado
   const childMap = useMemo(() => {
-    let offset = 0;
+    let offset = 0
     return childArray.map((element) => {
-      const text = extractText(element);
-      const entry = { element, text, start: offset, end: offset + text.length };
-      offset += text.length;
-      return entry;
-    });
-  }, [childArray]);
+      const text = extractText(element)
+      const entry = { element, text, start: offset, end: offset + text.length }
+      offset += text.length
+      return entry
+    })
+  }, [childArray])
 
   const totalLength = useMemo(
     () => childMap.reduce((sum, c) => sum + c.text.length, 0),
     [childMap]
-  );
+  )
 
   // ─── Estado de la animación ──────────────────────────────────────────
+  const contentKey = useMemo(
+    () => childMap.map((c) => c.text).join('\0'),
+    [childMap]
+  )
+
   const [displayedCount, setDisplayedCount] = useState(
     animated ? 0 : totalLength
-  );
-  const intervalRef = useRef(null);
-  const completedRef = useRef(false);
+  )
+  const intervalRef = useRef(null)
+  const completedRef = useRef(false)
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
 
   // ─── Helpers ─────────────────────────────────────────────────────────
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
-  }, []);
+  }, [])
 
   const fireComplete = useCallback(() => {
     if (!completedRef.current) {
-      completedRef.current = true;
-      if (onComplete) setTimeout(onComplete, 0);
+      completedRef.current = true
+      const cb = onCompleteRef.current
+      if (cb) setTimeout(cb, 0)
     }
-  }, [onComplete]);
+  }, [])
 
   // ─── Arrancar / resetear animación ───────────────────────────────────
   useEffect(() => {
-    clearTimer();
-    completedRef.current = false;
+    clearTimer()
+    completedRef.current = false
 
     if (!animated) {
-      setDisplayedCount(totalLength);
-      if (onComplete) setTimeout(onComplete, 0);
-      return;
+      setDisplayedCount(totalLength)
+      fireComplete()
+      return
     }
 
-    setDisplayedCount(0);
+    setDisplayedCount(0)
 
     intervalRef.current = setInterval(() => {
       setDisplayedCount((prev) => {
-        const next = prev + 1;
+        const next = prev + 1
         if (next >= totalLength) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-          fireComplete();
-          return totalLength;
+          clearInterval(intervalRef.current)
+          intervalRef.current = null
+          fireComplete()
+          return totalLength
         }
-        return next;
-      });
-    }, speed);
+        return next
+      })
+    }, speed)
 
-    return clearTimer;
-  }, [totalLength, animated, speed]); // eslint-disable-line react-hooks/exhaustive-deps
+    return clearTimer
+  }, [contentKey, totalLength, animated, speed])
 
   // ─── Skip al pulsar ─────────────────────────────────────────────────
   const handlePress = useCallback(() => {
-    clearTimer();
-    setDisplayedCount(totalLength);
-    fireComplete();
-    onPress?.();
-  }, [totalLength, clearTimer, fireComplete, onPress]);
+    clearTimer()
+    setDisplayedCount(totalLength)
+    fireComplete()
+    onPress?.()
+  }, [totalLength, clearTimer, fireComplete, onPress])
 
   // ─── Render de los children con texto recortado ─────────────────────
   const renderContent = () => {
     return childMap.map((entry, index) => {
-      const { element, text, start } = entry;
+      const { element, text, start } = entry
 
       // Este child aún no empezó → no renderizar
-      if (displayedCount <= start) return null;
+      if (displayedCount <= start) return null
 
-      const charsVisible = Math.min(displayedCount - start, text.length);
-      const visibleText = text.slice(0, charsVisible);
+      const charsVisible = Math.min(displayedCount - start, text.length)
+      const visibleText = text.slice(0, charsVisible)
 
       // Gap entre children (excepto el primero)
-      const gapStyle = index > 0 ? { marginTop: childrenGap } : undefined;
+      const gapStyle = index > 0 ? { marginTop: childrenGap } : undefined
 
       // String plano → usar <Text> fallback
-      if (typeof element === "string" || typeof element === "number") {
+      if (typeof element === 'string' || typeof element === 'number') {
         return (
           <View key={index} style={gapStyle}>
             <Text style={[styles.text, textStyle]}>{visibleText}</Text>
           </View>
-        );
+        )
       }
 
       // Elemento React (ej. <CustomText>) → clonar con texto recortado
@@ -237,15 +246,15 @@ export function TypewriterBubble({
           <View key={element.key || index} style={gapStyle}>
             {cloneWithText(element, visibleText)}
           </View>
-        );
+        )
       }
 
-      return null;
-    });
-  };
+      return null
+    })
+  }
 
   // ─── Arrow positions ────────────────────────────────────────────────
-  const arrowPositions = getArrowPositions(arrowDirection);
+  const arrowPositions = getArrowPositions(arrowDirection)
 
   // ─── Render ──────────────────────────────────────────────────────────
   return (
@@ -264,96 +273,96 @@ export function TypewriterBubble({
         <View style={[styles.arrowFill, arrowPositions.fill]} />
       </Pressable>
     </View>
-  );
+  )
 }
 
 // ─── Posicionamiento de las flechas ────────────────────────────────────
 function getArrowPositions(direction) {
-  const borderOutset = Math.round((ARROW_SIZE * Math.SQRT2) / 2) - 1;
+  const borderOutset = Math.round((ARROW_SIZE * Math.SQRT2) / 2) - 1
 
   switch (direction) {
-    case "left":
+    case 'left':
       return {
         border: {
           left: -(borderOutset - BORDER_WIDTH),
-          top: "50%",
+          top: '50%',
           marginTop: -(ARROW_SIZE / 2),
           borderBottomColor: colors.main,
           borderLeftColor: colors.main,
-          borderTopColor: "transparent",
-          borderRightColor: "transparent",
+          borderTopColor: 'transparent',
+          borderRightColor: 'transparent',
         },
         fill: {
           left: -(borderOutset - BORDER_WIDTH) + 3,
-          top: "50%",
+          top: '50%',
           marginTop: -(ARROW_FILL_SIZE / 2),
           width: ARROW_FILL_SIZE,
           height: ARROW_FILL_SIZE,
         },
-      };
+      }
 
-    case "right":
+    case 'right':
       return {
         border: {
           right: -(borderOutset - BORDER_WIDTH),
-          top: "50%",
+          top: '50%',
           marginTop: -(ARROW_SIZE / 2),
           borderTopColor: colors.main,
           borderRightColor: colors.main,
-          borderBottomColor: "transparent",
-          borderLeftColor: "transparent",
+          borderBottomColor: 'transparent',
+          borderLeftColor: 'transparent',
         },
         fill: {
           right: -(borderOutset - BORDER_WIDTH) + 3,
-          top: "50%",
+          top: '50%',
           marginTop: -(ARROW_FILL_SIZE / 2),
           width: ARROW_FILL_SIZE,
           height: ARROW_FILL_SIZE,
         },
-      };
+      }
 
-    case "top":
+    case 'top':
       return {
         border: {
           top: -(borderOutset - BORDER_WIDTH),
-          left: "50%",
+          left: '50%',
           marginLeft: -(ARROW_SIZE / 2),
           borderTopColor: colors.main,
           borderLeftColor: colors.main,
-          borderBottomColor: "transparent",
-          borderRightColor: "transparent",
+          borderBottomColor: 'transparent',
+          borderRightColor: 'transparent',
         },
         fill: {
           top: -(borderOutset - BORDER_WIDTH) + 3,
-          left: "50%",
+          left: '50%',
           marginLeft: -(ARROW_FILL_SIZE / 2),
           width: ARROW_FILL_SIZE,
           height: ARROW_FILL_SIZE,
         },
-      };
+      }
 
-    case "bottom":
+    case 'bottom':
       return {
         border: {
           bottom: -(borderOutset - BORDER_WIDTH),
-          left: "50%",
+          left: '50%',
           marginLeft: -(ARROW_SIZE / 2),
           borderBottomColor: colors.main,
           borderRightColor: colors.main,
-          borderTopColor: "transparent",
-          borderLeftColor: "transparent",
+          borderTopColor: 'transparent',
+          borderLeftColor: 'transparent',
         },
         fill: {
           bottom: -(borderOutset - BORDER_WIDTH) + 3,
-          left: "50%",
+          left: '50%',
           marginLeft: -(ARROW_FILL_SIZE / 2),
           width: ARROW_FILL_SIZE,
           height: ARROW_FILL_SIZE,
         },
-      };
+      }
 
     default:
-      return getArrowPositions("left");
+      return getArrowPositions('left')
   }
 }
 
@@ -362,7 +371,7 @@ const styles = StyleSheet.create({
   wrapper: {},
 
   bubbleContainer: {
-    position: "relative",
+    position: 'relative',
   },
 
   bubble: {
@@ -384,21 +393,21 @@ const styles = StyleSheet.create({
   },
 
   arrowBorder: {
-    position: "absolute",
+    position: 'absolute',
     width: ARROW_SIZE,
     height: ARROW_SIZE,
     // borderWidth: BORDER_WIDTH,
     // borderColor: colors.main,
-    transform: [{ rotate: "45deg" }],
+    transform: [{ rotate: '45deg' }],
     zIndex: 0,
   },
 
   arrowFill: {
-    position: "absolute",
+    position: 'absolute',
     width: ARROW_FILL_SIZE,
     height: ARROW_FILL_SIZE,
     backgroundColor: colors.white,
-    transform: [{ rotate: "45deg" }],
+    transform: [{ rotate: '45deg' }],
     zIndex: 2,
   },
-});
+})

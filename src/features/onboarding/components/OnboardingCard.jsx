@@ -1,8 +1,9 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 
-export function OnboardingCard({ icon, title, description, selectedCard, onPress }) {
+export function OnboardingCard({ icon, label, description, selectedCard, onPress }) {
   return (
     <TouchableOpacity
       style={[styles.card, selectedCard && styles.selectedCard]}
@@ -13,10 +14,10 @@ export function OnboardingCard({ icon, title, description, selectedCard, onPress
         <CustomText
           fontWeight={selectedCard ? 700 : 600}
           fontSize={18}
-          extraStyle={styles.title}
+          extraStyle={styles.label}
           color={selectedCard ? colors.dark : colors.white}
         >
-          {title}
+          {label}
         </CustomText>
         {description && (
           <CustomText

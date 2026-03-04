@@ -1,4 +1,5 @@
 import React, { cloneElement } from 'react'
+
 import CustomText from '@/src/components/CustomText'
 
 export const translationComponents = {

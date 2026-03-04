@@ -1,16 +1,20 @@
-import { Image, StyleSheet, View } from 'react-native'
-import { useTranslation } from 'react-i18next'
-import { BackButton } from '@/src/components/BackButton'
-import { TypewriterBubble } from '@/src/components/TypewriterBubble'
-import { Button } from '@/src/components/Button'
-import CustomText from '@/src/components/CustomText'
-import { renderTranslation } from '@/src/i18n/translationComponents'
 import { useRouter } from 'expo-router'
+import { useTranslation } from 'react-i18next'
+import { Image, StyleSheet, View } from 'react-native'
+
+import { BackButton } from '@/src/components/BackButton'
+import { Button, BUTTON_TYPES } from '@/src/components/Button'
+import CustomText from '@/src/components/CustomText'
+import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { colors } from '@/src/constants/theme'
+import { useOnboarding } from '@/src/contexts/OnboardingContext'
+import { renderTranslation } from '@/src/i18n/translationComponents'
 
 export function WelcomeScreen() {
   const { t } = useTranslation()
   const router = useRouter()
+
+  const { onboardingConfig } = useOnboarding()
 
   return (
     <View style={styles.container}>
@@ -31,7 +35,7 @@ export function WelcomeScreen() {
           </CustomText>
         </TypewriterBubble>
         <Image
-          source={require('../../../assets/images/kettlebud-logo.png')}
+          source={require('@/assets/images/kettlebud-logo.png')}
           style={styles.mascot}
           resizeMode="contain"
         />
@@ -39,6 +43,7 @@ export function WelcomeScreen() {
       <Button
         text={t('COMMON.GO')}
         onPress={() => router.push('/onboarding/goal')}
+        type={onboardingConfig !== null ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
       />
     </View>
   )

@@ -1,0 +1,16 @@
+export const ROUTES_NAMES = {
+  INIT: '/init',
+  WELCOME: '/onboarding/welcome',
+  GOAL: '/onboarding/goal',
+  EXPERIENCE: '/onboarding/experience',
+  DAYS_PER_WEEK: '/onboarding/daysPerWeek',
+  TIME_PER_SESSION: '/onboarding/timePerSession',
+  BRIDGE: '/onboarding/bridge',
+  GENDER: '/onboarding/gender',
+  BIRTH_DATE: '/onboarding/birthDate',
+  BODY_METRICS: '/onboarding/bodyMetrics',
+  INJURIES: '/onboarding/injuries',
+  PREPARING_PLAN: '/onboarding/preparingPlan',
+  PREVIEW_PLAN: '/previewPlan',
+  SUMMARY: '/onboarding/summary',
+}

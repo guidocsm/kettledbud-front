@@ -1,5 +1,6 @@
-import { View, StyleSheet, Platform } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
+import { View, StyleSheet, Platform } from 'react-native'
+
 import { colors } from '@/src/constants/theme'
 import { useBirthdayDate } from '@/src/hooks/useBirthdayDate'
 

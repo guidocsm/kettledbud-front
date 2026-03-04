@@ -1,4 +1,4 @@
-import { fonts, fontWeights } from "./theme"
+import { fonts, fontWeights } from './theme'
 
 export function getFontFamily(fontKey, weight) {
   const family = fonts[fontKey]

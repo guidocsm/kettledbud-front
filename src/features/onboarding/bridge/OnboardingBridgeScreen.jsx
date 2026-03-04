@@ -1,12 +1,14 @@
-import { BackButton } from "@/src/components/BackButton";
-import { TypewriterBubble } from "@/src/components/TypewriterBubble";
-import { useTranslation } from "react-i18next";
-import { useRouter } from "expo-router";
-import { Image, StyleSheet, View } from "react-native";
-import CustomText from "@/src/components/CustomText";
-import { colors } from "@/src/constants/theme";
-import { Button } from "@/src/components/Button";
-import { renderTranslation } from "@/src/i18n/translationComponents";
+import { useRouter } from 'expo-router'
+import { useTranslation } from 'react-i18next'
+import { Image, StyleSheet, View } from 'react-native'
+
+import { BackButton } from '@/src/components/BackButton'
+import { Button } from '@/src/components/Button'
+import CustomText from '@/src/components/CustomText'
+import { TypewriterBubble } from '@/src/components/TypewriterBubble'
+import { colors } from '@/src/constants/theme'
+import { renderTranslation } from '@/src/i18n/translationComponents'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 export default function OnboardingBridgeScreen() {
   const { t } = useTranslation()
@@ -35,7 +37,7 @@ export default function OnboardingBridgeScreen() {
       </View>
       <Button
         text={t('COMMON.CONTINUE')}
-        onPress={() => router.push('/onboarding/gender')}
+        onPress={() => router.push(ROUTES_NAMES.GENDER)}
       />
     </View>
   )

@@ -1,27 +1,30 @@
-import { StyleSheet, View } from 'react-native'
-import { useOnboarding } from '@/src/contexts/OnboardingContext'
-import { DatePicker } from '@/src/components/DatePicker'
-import { Button } from '@/src/components/Button'
-import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
-import CustomText from '@/src/components/CustomText'
-import { colors } from '@/src/constants/theme'
 import { useRouter } from 'expo-router'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { StyleSheet, View } from 'react-native'
 
-export default function BirthdayScreen() {
+import { Button, BUTTON_TYPES } from '@/src/components/Button'
+import CustomText from '@/src/components/CustomText'
+import { DatePicker } from '@/src/components/DatePicker'
+import { colors } from '@/src/constants/theme'
+import { useOnboarding } from '@/src/contexts/OnboardingContext'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
+
+export default function BirthDateScreen() {
   const { onboardingState, setOnboardingState } = useOnboarding()
+
   const { t } = useTranslation()
   const router = useRouter()
 
   const handleDateChange = (date) => {
-    setOnboardingState((prev) => ({ ...prev, birthday: date }))
+    setOnboardingState((prev) => ({ ...prev, birthDate: date }))
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <DatePicker
-          initialDate={onboardingState.birthday ?? null}
+          initialDate={onboardingState.birthDate ?? null}
           onDateChange={handleDateChange}
         />
         <CustomText
@@ -32,9 +35,9 @@ export default function BirthdayScreen() {
       </View>
       <Button
         text={t('COMMON.CONTINUE')}
-        type={onboardingState?.birthday ? 'main' : 'disabled'}
+        type={onboardingState?.birthDate ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
         onPress={() => {
-          router.push('/onboarding/bodyMetrics')
+          router.push(ROUTES_NAMES.BODY_METRICS)
         }}
       />
     </View>

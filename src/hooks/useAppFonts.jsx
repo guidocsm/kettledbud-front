@@ -1,4 +1,3 @@
-import { useFonts } from 'expo-font'
 import {
   Baloo2_400Regular,
   Baloo2_500Medium,
@@ -15,6 +14,7 @@ import {
   Nunito_800ExtraBold,
   Nunito_900Black,
 } from '@expo-google-fonts/nunito'
+import { useFonts } from 'expo-font'
 
 export function useAppFonts() {
   const [fontsLoaded, fontError] = useFonts({

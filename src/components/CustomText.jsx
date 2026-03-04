@@ -1,8 +1,9 @@
 import React from 'react'
 import { Text } from 'react-native'
-import { colors, fontBody } from '../constants/theme'
+
 import { getFontFamily } from '../constants/getFontFamily'
 import { normalizeText } from '../constants/normalizeText'
+import { colors, fontBody } from '../constants/theme'
 
 const CustomText = ({
   text,
