@@ -1,0 +1,8 @@
+export const MUSCULAR_GROUPS = {
+  upper: 'MUSCULAR_GROUP_UPPER',
+  lower: 'MUSCULAR_GROUP_LOWER',
+  full_body: 'MUSCULAR_GROUP_FULL_BODY',
+  push: 'MUSCULAR_GROUP_PUSH',
+  pull: 'MUSCULAR_GROUP_PULL',
+  legs: 'MUSCULAR_GROUP_LEGS',
+}

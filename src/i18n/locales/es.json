@@ -8,7 +8,8 @@
       "FEEL_BETTER": "Sentirme mejor",
       "LOSE_FAT": "Perder grasa",
       "GAIN_MUSCLE": "Ganar músculo"
-    }
+    },
+    "EXIT": "Salir"
   },
   "INIT": {
     "SUBTITLE": "Tu gym buddy. Aprende, entrena y progresa.",
@@ -50,6 +51,25 @@
   },
   "PREVIEW_PLAN": {
     "SETTLED_PLAN": "¡Todo listo! He creado tu programa.",
-    "DESCRIPTION": "Revisa el resumen y cuando estés listo guarda tu plan y empezamos el camino."
+    "DESCRIPTION": "Revisa el resumen y cuando estés listo guarda tu plan y empezamos el camino.",
+    "SAVE_PLAN": "Guardar mi plan",
+    "YOUR_GOAL": "Tu objetivo",
+    "WEEKS": "semanas",
+    "DAYS_WEEKS": "días / semanas",
+    "MIN_SESSION": "min / sesión",
+    "WEEKLY_PLAN": {
+      "TITLE": "Tu plan semanal",
+      "MUSCULAR_GROUP_AND_EXERCISES": "{{muscularGroup}} | {{exercises}} ejercicios",
+      "LOCKED_MESSAGE": "Descubrirás el resto en tu sesión"
+    },
+    "MUSCULAR_GROUPS": {
+      "MUSCULAR_GROUP_UPPER": "Tren superior",
+      "MUSCULAR_GROUP_LOWER": "Tren inferior",
+      "MUSCULAR_GROUP_FULL_BODY": "Tren completo",
+      "MUSCULAR_GROUP_PUSH": "Push",
+      "MUSCULAR_GROUP_PULL": "Pull",
+      "MUSCULAR_GROUP_LEGS": "Piernas"
+    },
+    "START_AGAIN": "Empezar de nuevo"
   }
 }

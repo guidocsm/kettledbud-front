@@ -6,13 +6,14 @@ import { Button } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import PageWrapper from '@/src/components/PageWrapper'
 
 function InitScreen() {
   const router = useRouter()
   const { t } = useTranslation()
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <Image
         source={require('@/assets/images/kettlebud-logo.png')}
       />
@@ -40,13 +41,12 @@ function InitScreen() {
           type="outline"
         />
       </View>
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     gap: 30,
     justifyContent: 'center',
     alignItems: 'center',

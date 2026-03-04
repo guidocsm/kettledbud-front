@@ -9,13 +9,14 @@ import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { colors } from '@/src/constants/theme'
 import { renderTranslation } from '@/src/i18n/translationComponents'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function OnboardingBridgeScreen() {
   const { t } = useTranslation()
   const router = useRouter()
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <BackButton />
       <View style={styles.content}>
         <TypewriterBubble arrowDirection="bottom">
@@ -39,13 +40,12 @@ export default function OnboardingBridgeScreen() {
         text={t('COMMON.CONTINUE')}
         onPress={() => router.push(ROUTES_NAMES.GENDER)}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   content: {

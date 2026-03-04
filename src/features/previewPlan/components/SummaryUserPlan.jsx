@@ -1,18 +1,24 @@
-import { BurnIcon, GoalIcon, IOSWatchIcon } from "@/assets/Icons";
+import { BurnIcon, CalendarIcon, ClockIcon, GoalIcon, IOSWatchIcon } from "@/assets/Icons";
 import CustomText from "@/src/components/CustomText";
 import { colors } from "@/src/constants/theme";
 import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { GOALS_KEYS } from "../../onboarding/utils/constants";
+import { LinearGradient } from "expo-linear-gradient";
 
 export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, timePerSession = null, goal = null }) {
   const { t } = useTranslation()
-  
+
   return (
     <View style={styles.container}>
-      <View style={styles.goalContainer}>
+      <LinearGradient
+        colors={['#57401A', colors.main]}
+        start={{ x: .2, y: 0 }}
+        end={{ x: 2, y: 0 }}
+        style={styles.goalContainer}
+      >
         <View style={styles.goalIconContainer}>
-        <GoalIcon color={colors.main} />
+          <GoalIcon color={colors.main} />
         </View>
         <View style={styles.goalTextContainer}>
           <CustomText 
@@ -22,17 +28,17 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
             fontSize={18}
           />
           <CustomText 
-            text="Tu objetivo"
+            text={t('PREVIEW_PLAN.YOUR_GOAL')}
             color={colors.whiteLight}
             fontWeight={500}
             fontSize={14}
           />
         </View>
-      </View>
+      </LinearGradient>
       <View style={styles.dataContainer}>
         <View style={styles.dataItem}>
           <View style={styles.goalIconContainer}>
-            <GoalIcon color={colors.main} />
+            <CalendarIcon color={colors.main} />
           </View>
           <CustomText 
             text={durationWeeks} 
@@ -41,8 +47,8 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
             fontSize={24} 
           />
           <CustomText 
-            text="semanas" 
-            color={colors.white} 
+            text={t('PREVIEW_PLAN.WEEKS')} 
+            color={colors.whiteLight} 
             fontWeight={500} 
             fontSize={14} 
           />
@@ -59,8 +65,8 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
             fontSize={24} 
           />
           <CustomText 
-            text="días / semanas" 
-            color={colors.white} 
+            text={t('PREVIEW_PLAN.DAYS_WEEKS')} 
+            color={colors.whiteLight} 
             fontWeight={500} 
             fontSize={14} 
           />
@@ -77,8 +83,8 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
             fontSize={24} 
           />
           <CustomText 
-            text="min / sesión" 
-            color={colors.white} 
+            text={t('PREVIEW_PLAN.MIN_SESSION')} 
+            color={colors.whiteLight} 
             fontWeight={500} 
             fontSize={14} 
           />
@@ -94,12 +100,12 @@ const styles = StyleSheet.create({
   },
   goalContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
-    borderWidth: 1,
-    borderColor: colors.main,
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 20,
+    overflow: 'hidden',
   },
   goalIconContainer: {
     backgroundColor: colors.mainLight,

@@ -237,11 +237,8 @@ export default function PreparingPlan({
         timePerSession: onboardingState?.timePerSession,
         injuries: onboardingState?.injuries,
       }
-      console.log('payload', payload);
       try {
         const data = await apiClient.post('/preview-plan', payload)
-
-        console.log('data', data)
 
         if (!mounted) return
 

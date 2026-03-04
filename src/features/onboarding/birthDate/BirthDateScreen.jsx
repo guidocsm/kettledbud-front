@@ -9,6 +9,7 @@ import { DatePicker } from '@/src/components/DatePicker'
 import { colors } from '@/src/constants/theme'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function BirthDateScreen() {
   const { onboardingState, setOnboardingState } = useOnboarding()
@@ -21,7 +22,7 @@ export default function BirthDateScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <View style={styles.content}>
         <DatePicker
           initialDate={onboardingState.birthDate ?? null}
@@ -40,13 +41,12 @@ export default function BirthDateScreen() {
           router.push(ROUTES_NAMES.BODY_METRICS)
         }}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   content: {

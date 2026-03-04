@@ -8,6 +8,7 @@ import { colors } from '@/src/constants/theme'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { DaysPerWeekCard } from './DaysPerWeekCard'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function DaysPerWeekScreen() {
   const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
@@ -23,7 +24,7 @@ export default function DaysPerWeekScreen() {
   const selectedDay = daysPerWeekOptions.find(option => option.value === onboardingState?.daysPerWeek) || null 
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.cardsContainer}>
           {daysPerWeekOptions.map((option, index) => (
@@ -56,13 +57,12 @@ export default function DaysPerWeekScreen() {
         type={onboardingState?.daysPerWeek != null ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
         onPress={() => router.push(ROUTES_NAMES.TIME_PER_SESSION)}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

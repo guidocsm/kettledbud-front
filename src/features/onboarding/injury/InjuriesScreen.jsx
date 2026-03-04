@@ -9,6 +9,7 @@ import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { InjuriesCard } from './components/InjuriesCard'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function InjuriesScreen() {
   const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
@@ -65,7 +66,7 @@ export default function InjuriesScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.content}>
           {injuryOptions.map((option) => (
@@ -90,13 +91,12 @@ export default function InjuriesScreen() {
         type={(onboardingState?.injuries?.length ?? 0) > 0 ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
         onPress={onSubmitOnboarding}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   contentContainer: {

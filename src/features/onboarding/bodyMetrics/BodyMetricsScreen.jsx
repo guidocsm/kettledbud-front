@@ -13,6 +13,7 @@ import {
   UNIT_HEIGHT_CM,
   UNIT_WEIGHT_KG,
 } from '@/src/features/onboarding/bodyMetrics/utils/constants'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function BodyMetricsScreen() {
   const { onboardingState, setOnboardingState } = useOnboarding()
@@ -35,7 +36,7 @@ export default function BodyMetricsScreen() {
   const canContinue = onboardingState?.bodyMetrics?.height && onboardingState?.bodyMetrics?.weight
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <View style={styles.content}>
         <View style={styles.pickersRow}>
           <View style={styles.pickerHalf}>
@@ -66,13 +67,12 @@ export default function BodyMetricsScreen() {
           router.push('/onboarding/injuries')
         }}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   content: {

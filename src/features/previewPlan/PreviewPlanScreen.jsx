@@ -10,6 +10,7 @@ import { PreviewKettlebiMessage } from './components/PreviewKettlebiMessage'
 import { SummaryUserPlan } from './components/SummaryUserPlan'
 import { WeeklyPlan } from './components/WeeklyPlan'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function PreviewPlanScreen() {
   const [previewPlan, setPreviewPlan] = useState(null)
@@ -27,7 +28,10 @@ export default function PreviewPlanScreen() {
   }, [])
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <PageWrapper
+      style={styles.container} 
+      isScrollView
+    >
       <PreviewKettlebiMessage />
       <SummaryUserPlan 
         durationWeeks={previewPlan?.durationWeeks} 
@@ -38,25 +42,26 @@ export default function PreviewPlanScreen() {
       <WeeklyPlan previewPlan={previewPlan} />
       <View style={styles.buttonContainer}>
         <Button 
-          text="Guardar mi plan"
+          text={t('PREVIEW_PLAN.SAVE_PLAN')}
           onPress={() => console.log('Guardar mi plan')}
           type={BUTTON_TYPES.MAIN}
         />
         <CustomText
-          text="Salir"
+          text={t('PREVIEW_PLAN.START_AGAIN')}
           color={colors.whiteLight}
           fontSize={16}
           fontWeight={600}
           extraStyle={styles.exitButton}
         />
       </View>
-    </ScrollView>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: 50
+    gap: 50,
+    paddingTop: 50,
   },
   buttonContainer: {
     gap: 20,
