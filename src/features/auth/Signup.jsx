@@ -2,19 +2,24 @@ import { GoogleIcon } from '@/assets/Icons'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import { CustomModal } from '@/src/components/CustomModal'
 import CustomText from '@/src/components/CustomText'
+import { FormField } from '@/src/components/FormField'
 import { colors } from '@/src/constants/theme'
-import { useState } from 'react'
+import { signUpValidations } from '@/validations/auth/signUpValidations'
+import { Formik } from 'formik'
+import { useTranslation } from 'react-i18next'
 import {
   Image,
   Pressable,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
 
 export default function Signup({ visible = false, onClose }) {
-  const [email, setEmail] = useState('')
+  const { t } = useTranslation()
+  const onSubmit = (values) => {
+    console.log(values)
+  }
 
   return (
     <CustomModal visible={visible} onClose={onClose} transparent showBlur>
@@ -34,14 +39,14 @@ export default function Signup({ visible = false, onClose }) {
           </View>
           <View style={styles.titleContainer}>
             <CustomText
-              text="Un último paso"
+              text={t('AUTH.SIGNUP.ONBOARDING.TITLE')}
               fontSize={20}
               fontWeight={600}
               color={colors.white}
               extraStyle={styles.title}
             />
             <CustomText
-              text="Regístrate para guardar tu plan"
+              text={t('AUTH.SIGNUP.ONBOARDING.DESCRIPTION')}
               fontSize={16}
               fontWeight={500}
               color={colors.whiteLight}
@@ -49,35 +54,33 @@ export default function Signup({ visible = false, onClose }) {
           </View>
         </View>
         <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <CustomText
-              text="Correo electrónico"
-              fontSize={16}
-              fontWeight={300}
-              color={colors.white}
-              extraStyle={styles.inputLabel}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="usuario@gmail.com"
-              placeholderTextColor={colors.whiteLight}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          </View>
-          <Button
-            type={BUTTON_TYPES.MAIN}
-            text="Continuar"
-            onPress={() => {}}
-          />
+          <Formik
+            initialValues={{ email: '' }}
+            onSubmit={onSubmit}
+            validationSchema={signUpValidations}
+          >
+            {({ handleChange, handleSubmit, values }) => (
+              <View style={styles.formContainer}>
+                <FormField
+                  label={t('COMMON.FORM.EMAIL.LABEL')}
+                  placeholder={t('COMMON.FORM.EMAIL.PLACEHOLDER')}
+                  name="email"
+                  value={values.email}
+                  keyboardType="email-address"
+                />
+                <Button
+                  type={BUTTON_TYPES.MAIN}
+                  text={t('COMMON.CONTINUE')}
+                  onPress={handleSubmit}
+                />
+              </View>
+            )}
+          </Formik>
         </View>
         <View style={styles.separator}>
           <View style={styles.separatorLine} />
           <CustomText
-            text="Si lo prefieres:"
+            text={t('AUTH.OTHER_OPTIONS_LABEL')}
             fontSize={16}
             fontWeight={300}
             color={colors.white}
@@ -89,7 +92,7 @@ export default function Signup({ visible = false, onClose }) {
           <Pressable style={styles.googleButton}>
             <GoogleIcon width={20} height={20} color={colors.dark} />
             <CustomText
-              text="Accede con Google"
+              text={t('AUTH.GOOGLE.TITLE')}
               fontSize={16}
               fontWeight={600}
               color={colors.dark}
@@ -97,7 +100,7 @@ export default function Signup({ visible = false, onClose }) {
           </Pressable>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <CustomText
-              text="Cerrar"
+              text={t('COMMON.CLOSE')}
               fontSize={14}
               fontWeight={500}
               color={colors.white}
@@ -142,6 +145,9 @@ const styles = StyleSheet.create({
     height: 23,
   },
   form: {
+    gap: 30,
+  },
+  formContainer: {
     gap: 30,
   },
   inputContainer: {

@@ -8,6 +8,7 @@ export const colors = {
   gray: '#373635',
   white: '#FFFFFF',
   whiteLight: '#FFFFFFB3',
+  error: '#EE2737',
 }
 
 export const fontWeights = [300, 400, 500, 600, 700, 800, 900]

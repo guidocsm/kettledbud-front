@@ -9,7 +9,16 @@
       "LOSE_FAT": "Perder grasa",
       "GAIN_MUSCLE": "Ganar músculo"
     },
-    "EXIT": "Salir"
+    "FORM": {
+      "EMAIL": {
+        "LABEL": "Correo electrónico",
+        "PLACEHOLDER": "usuario@gmail.com",
+        "INVALID": "Email inválido"
+      },
+      "REQUIRED_FIELD": "Debes rellenar este campo"
+    },
+    "EXIT": "Salir",
+    "CLOSE": "Cerrar"
   },
   "INIT": {
     "SUBTITLE": "Tu gym buddy. Aprende, entrena y progresa.",
@@ -71,5 +80,21 @@
       "MUSCULAR_GROUP_LEGS": "Piernas"
     },
     "START_AGAIN": "Empezar de nuevo"
+  },
+  "AUTH": {
+    "SIGNUP": {
+      "ONBOARDING": {
+        "TITLE": "Un último paso",
+        "DESCRIPTION": "Regístrate para guardar tu plan",
+        "EMAIL": "Correo electrónico",
+        "EMAIL_PLACEHOLDER": "usuario@gmail.com",
+        "CONTINUE": "Continuar"
+      }
+    },
+    "GOOGLE": {
+      "TITLE": "Accede con Google",
+      "DESCRIPTION": "Regístrate para guardar tu plan"
+    },
+    "OTHER_OPTIONS_LABEL": "Si lo prefieres:"
   }
 }
