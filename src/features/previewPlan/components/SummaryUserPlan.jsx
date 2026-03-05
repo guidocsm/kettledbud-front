@@ -1,10 +1,10 @@
-import { BurnIcon, CalendarIcon, ClockIcon, GoalIcon, IOSWatchIcon } from "@/assets/Icons";
-import CustomText from "@/src/components/CustomText";
-import { colors } from "@/src/constants/theme";
-import { StyleSheet, View } from "react-native";
-import { useTranslation } from "react-i18next";
-import { GOALS_KEYS } from "../../onboarding/utils/constants";
-import { LinearGradient } from "expo-linear-gradient";
+import { BurnIcon, CalendarIcon, ClockIcon, GoalIcon, IOSWatchIcon } from '@/assets/Icons'
+import CustomText from '@/src/components/CustomText'
+import { colors } from '@/src/constants/theme'
+import { StyleSheet, View } from 'react-native'
+import { useTranslation } from 'react-i18next'
+import { GOALS_KEYS } from '../../onboarding/utils/constants'
+import { LinearGradient } from 'expo-linear-gradient'
 
 export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, timePerSession = null, goal = null }) {
   const { t } = useTranslation()
@@ -13,8 +13,8 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
     <View style={styles.container}>
       <LinearGradient
         colors={['#57401A', colors.main]}
-        start={{ x: .2, y: 0 }}
-        end={{ x: 2, y: 0 }}
+        start={{ x: .3, y: 0 }}
+        end={{ x: 1.8, y: 0 }}
         style={styles.goalContainer}
       >
         <View style={styles.goalIconContainer}>
@@ -29,7 +29,7 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
           />
           <CustomText 
             text={t('PREVIEW_PLAN.YOUR_GOAL')}
-            color={colors.whiteLight}
+            color={colors.main}
             fontWeight={500}
             fontSize={14}
           />

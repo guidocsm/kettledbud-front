@@ -1,22 +1,24 @@
-import { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native'
+import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
-import { TypewriterBubble } from '@/src/components/TypewriterBubble'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRouter } from 'expo-router'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GOALS_KEYS } from '../onboarding/utils/constants'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { PreviewKettlebiMessage } from './components/PreviewKettlebiMessage'
 import { SummaryUserPlan } from './components/SummaryUserPlan'
 import { WeeklyPlan } from './components/WeeklyPlan'
-import { Button, BUTTON_TYPES } from '@/src/components/Button'
-import PageWrapper from '@/src/components/PageWrapper'
 
 export default function PreviewPlanScreen() {
   const [previewPlan, setPreviewPlan] = useState(null)
   const [userData, setUserData] = useState(null)
 
   const { t } = useTranslation()
+  const router = useRouter()
+
   useEffect(() => {
     const fetchPreviewPlan = async () => {
       const previewPlanAsync = await AsyncStorage.getItem('previewPlan')
@@ -27,32 +29,37 @@ export default function PreviewPlanScreen() {
     fetchPreviewPlan()
   }, [])
 
+  const handleStartAgain = async () => {
+    await AsyncStorage.removeItem('previewPlan')
+    await AsyncStorage.removeItem('userInfo')
+    router.replace(ROUTES_NAMES.INIT)
+  }
+
   return (
-    <PageWrapper
-      style={styles.container} 
-      isScrollView
-    >
+    <PageWrapper style={styles.container} isScrollView>
       <PreviewKettlebiMessage />
-      <SummaryUserPlan 
-        durationWeeks={previewPlan?.durationWeeks} 
-        daysPerWeek={previewPlan?.daysPerWeek} 
-        timePerSession={previewPlan?.timePerSession} 
-        goal={previewPlan?.goal} 
+      <SummaryUserPlan
+        durationWeeks={previewPlan?.durationWeeks}
+        daysPerWeek={previewPlan?.daysPerWeek}
+        timePerSession={previewPlan?.timePerSession}
+        goal={previewPlan?.goal}
       />
       <WeeklyPlan previewPlan={previewPlan} />
       <View style={styles.buttonContainer}>
-        <Button 
+        <Button
           text={t('PREVIEW_PLAN.SAVE_PLAN')}
           onPress={() => console.log('Guardar mi plan')}
           type={BUTTON_TYPES.MAIN}
         />
-        <CustomText
-          text={t('PREVIEW_PLAN.START_AGAIN')}
-          color={colors.whiteLight}
-          fontSize={16}
-          fontWeight={600}
-          extraStyle={styles.exitButton}
-        />
+        <TouchableOpacity onPress={handleStartAgain}>
+          <CustomText
+            text={t('PREVIEW_PLAN.START_AGAIN')}
+            color={colors.whiteLight}
+            fontSize={16}
+            fontWeight={600}
+            extraStyle={styles.exitButton}
+          />
+        </TouchableOpacity>
       </View>
     </PageWrapper>
   )
@@ -60,7 +67,7 @@ export default function PreviewPlanScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 50,
+    gap: 30,
     paddingTop: 50,
   },
   buttonContainer: {
