@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
+
 import { colors } from '@/src/constants/theme'
 
 const CURRENT_WIDTH = 45
@@ -48,8 +49,8 @@ export function OnboardingProgressBar({ currentStepIndex = 0, totalSteps = 8 }) 
       {Array.from({ length: totalSteps }, (_, i) => {
         const state =
           i === currentStepIndex ? 'current'
-          : i < currentStepIndex ? 'completed'
-          : 'rest'
+            : i < currentStepIndex ? 'completed'
+              : 'rest'
 
         return <Step key={i} state={state} />
       })}

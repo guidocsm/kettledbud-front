@@ -2,7 +2,9 @@ import '@/src/i18n'
 import { Stack } from 'expo-router'
 import { StyleSheet } from 'react-native'
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
+
 import { useAppFonts } from '@/src/hooks/useAppFonts'
+
 import { colors } from '../src/constants/theme'
 
 export default function IndexLayout() {
@@ -19,8 +21,7 @@ export default function IndexLayout() {
           contentStyle: [
             styles.screenContent,
             {
-              paddingTop: insets.top + 30,
-              paddingBottom: insets.bottom,
+              paddingTop: insets.top,
               paddingLeft: insets.left + 30,
               paddingRight: insets.right + 30,
             },
@@ -30,8 +31,8 @@ export default function IndexLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="init" />
-        <Stack.Screen name="welcome" />
         <Stack.Screen name="onboarding" />
+        <Stack.Screen name="previewPlan" />
       </Stack>
     </SafeAreaProvider>
   )

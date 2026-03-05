@@ -1,70 +1,98 @@
+import { useRouter } from 'expo-router'
 import { View, StyleSheet } from 'react-native'
-import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
-import { FollowUpCard } from '@/src/features/onboarding/experience/FollowUpCard'
+
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
-import { ONBOARDING } from '@/src/features/onboarding/utils/constants'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
-import { useRouter } from 'expo-router'
+import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
+import { FollowUpCard } from '@/src/features/onboarding/experience/FollowUpCard'
+import { EXPERIENCE_STEP } from '@/src/features/onboarding/utils/constants'
+import { useTranslation } from 'react-i18next'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 export default function ExperienceScreen() {
+  const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
+
   const router = useRouter()
-  const { onboardingState, setOnboardingState } = useOnboarding()
+  const { t } = useTranslation()
 
-  const selectedSlug = onboardingState?.experienceSelection ?? null
-  const followUpAnswer = onboardingState?.experienceFollowUp ?? null
-  const selectedOption = ONBOARDING.EXPERIENCE.find(o => o.slug === selectedSlug)
+  const handlePress = (value) => {
+    const hasFollowUp = value !== EXPERIENCE_STEP.KEYS.NEW
 
-  const handlePress = (option) => {
-    setOnboardingState(prev => ({
+    setOnboardingState((prev) => ({
       ...prev,
-      experienceSelection: option.slug,
+      experienceSelection: value,
       experienceFollowUp: null,
-      experience: option?.followUp ? undefined : option.slug,
+      experience: hasFollowUp ? undefined : value,
     }))
 
-    if (!option?.followUp) {
-      router.push('/onboarding/workoutPerWeek')
+    if (!hasFollowUp) {
+      router.push(ROUTES_NAMES.DAYS_PER_WEEK)
     }
   }
 
   const handleFollowUp = (moreThanSixMonths) => {
-    setOnboardingState(prev => ({
+    setOnboardingState((prev) => ({
       ...prev,
       experienceFollowUp: moreThanSixMonths,
-      experience: moreThanSixMonths ? 'experienced' : 'new'
+      experience: moreThanSixMonths ? EXPERIENCE_STEP.KEYS.RETURNING : EXPERIENCE_STEP.KEYS.NEW,
     }))
 
-    router.push('/onboarding/workoutPerWeek')
+    router.push(ROUTES_NAMES.DAYS_PER_WEEK)
+  }
+
+  const experienceOptions = onboardingConfig?.experienceLevels?.map(level => ({
+    ...level,
+    icon: EXPERIENCE_STEP.ICONS[level.value],
+  })) ?? []
+  const experienceValue = onboardingState?.experienceSelection ?? null
+  const followUpAnswer = onboardingState?.experienceFollowUp ?? null
+  const hasFollowUp = experienceValue && experienceValue !== EXPERIENCE_STEP.KEYS.NEW
+
+
+  if (!experienceOptions.length) {
+    return null
   }
 
   return (
     <View style={styles.container}>
-      {ONBOARDING.EXPERIENCE.map((option, index) => (
-        <OnboardingCard
-          key={index}
-          icon={<option.icon color={selectedSlug === option.slug ? colors.dark : colors.main} />}
-          title={option.title}
-          description={option.description}
-          onPress={() => handlePress(option)}
-          selectedCard={selectedSlug === option.slug}
-        />
-      ))}
-      {selectedOption?.followUp && (
+      {experienceOptions.map((option, index) => {
+        const IconComponent = option.icon
+        
+        return (
+          <OnboardingCard
+            key={option.value}
+            label={option.label}
+            description={option.description}
+            onPress={() => handlePress(option.value)}
+            selectedCard={experienceValue === option.value}
+            icon={
+              <IconComponent
+                color={experienceValue === option.value ? colors.dark : colors.main}
+              />
+            }
+          />
+        )
+      })}
+      {hasFollowUp && (
         <View style={styles.followUp}>
-          <CustomText fontWeight={600} fontSize={16} color={colors.white}>
-            {selectedOption.followUp}
+          <CustomText 
+            fontWeight={600} 
+            fontSize={16} 
+            color={colors.white}
+          >
+            {t('ONBOARDING.EXPERIENCE.FOLLOW_UP.MESSAGE')}
           </CustomText>
           <View style={styles.buttonRow}>
             <FollowUpCard
-              label="Sí"
+              label={t('ONBOARDING.EXPERIENCE.FOLLOW_UP.YES')}
               selected={followUpAnswer === true}
-              onPress={() => handleFollowUp(true)}
+              onPress={() => handleFollowUp(followUpAnswer)}
             />
             <FollowUpCard
-              label="No"
+              label={t('ONBOARDING.EXPERIENCE.FOLLOW_UP.NO')}
               selected={followUpAnswer === false}
-              onPress={() => handleFollowUp(false)}
+              onPress={() => handleFollowUp(followUpAnswer)}
             />
           </View>
         </View>

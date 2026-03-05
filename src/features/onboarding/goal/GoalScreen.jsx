@@ -1,32 +1,43 @@
-import { View, StyleSheet } from 'react-native'
-import { useTranslation } from 'react-i18next'
-import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
-import { colors } from '@/src/constants/theme'
-import { ONBOARDING } from '@/src/features/onboarding/utils/constants'
-import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { useRouter } from 'expo-router'
+import { useTranslation } from 'react-i18next'
+import { View, StyleSheet } from 'react-native'
+
+import { colors } from '@/src/constants/theme'
+import { useOnboarding } from '@/src/contexts/OnboardingContext'
+import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
+import { GOALS_STEP } from '../utils/constants'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 export default function GoalScreen() {
   const { t } = useTranslation()
   const router = useRouter()
-  const { onboardingState, setOnboardingState } = useOnboarding()
+  const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
 
   const handlePress = (slug) => {
     setOnboardingState(prev => ({ ...prev, goal: slug }))
-    router.push('/onboarding/experience')
+    router.push(ROUTES_NAMES.EXPERIENCE)
+  }
+
+  const goalsOptions = onboardingConfig?.goals?.map((goal) => ({
+    ...goal,
+    icon: GOALS_STEP.ICONS[goal.value],
+  })) || []
+
+  if (!goalsOptions.length) {
+    return null
   }
 
   return (
     <View style={styles.container}>
-      {ONBOARDING.GOAL.map((option, index) => {
+      {goalsOptions?.map((option) => {
         return (
           <OnboardingCard
-            key={index}
-            icon={<option.icon color={onboardingState?.goal === option.slug ? colors.dark : colors.main} />}
-            title={option.title}
+            key={option.value}
+            icon={<option.icon color={onboardingState?.goal === option.value ? colors.dark : colors.main} />}
+            label={option.label}
             description={option.description}
-            onPress={() => handlePress(option.slug)}
-            selectedCard={onboardingState.goal === option.slug}
+            onPress={() => handlePress(option.value)}
+            selectedCard={onboardingState?.goal === option.value}
           />
         )
       })}

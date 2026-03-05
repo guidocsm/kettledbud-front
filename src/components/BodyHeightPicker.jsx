@@ -1,14 +1,15 @@
-import { View, StyleSheet, Pressable, Platform } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
+import { View, StyleSheet, Pressable, Platform } from 'react-native'
+
 import CustomText from '@/src/components/CustomText'
 import { colors, fontDisplay } from '@/src/constants/theme'
-import { useBodyHeight } from '@/src/hooks/useBodyHeight'
 import {
   CM_VALUES,
   FT_IN_VALUES,
   UNIT_HEIGHT_CM,
   UNIT_HEIGHT_FT,
 } from '@/src/features/onboarding/bodyMetrics/utils/constants'
+import { useBodyHeight } from '@/src/hooks/useBodyHeight'
 
 export function BodyHeightPicker({ initialHeight, unit: initialUnit = UNIT_HEIGHT_CM, onHeightChange }) {
   const { cm, totalInches, unit, handleCmChange, handleFtInChange, switchUnit } = useBodyHeight({

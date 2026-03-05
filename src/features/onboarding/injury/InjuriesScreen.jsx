@@ -1,50 +1,80 @@
-import { View, StyleSheet } from 'react-native'
-import { useTranslation } from 'react-i18next'
-import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
-import { colors } from '@/src/constants/theme'
-import { ONBOARDING } from '@/src/features/onboarding/utils/constants'
-import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { useRouter } from 'expo-router'
-import { InjuriesCard } from './components/InjuriesCard'
-import { Button } from '@/src/components/Button'
+import { useTranslation } from 'react-i18next'
+import { View, StyleSheet } from 'react-native'
+
+import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import { colors } from '@/src/constants/theme'
+import { useOnboarding } from '@/src/contexts/OnboardingContext'
+import { InjuriesCard } from './components/InjuriesCard'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function InjuriesScreen() {
+  const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
+
   const { t } = useTranslation()
   const router = useRouter()
-  const { onboardingState, setOnboardingState } = useOnboarding()
 
-  const handlePress = (injurySlug) => {
-    setOnboardingState(prev => {
+  const injuryOptions = [...onboardingConfig?.injuryOptions, {
+    value: '',
+    label: t('ONBOARDING.INJURIES.NONE'),
+  }] ?? []
+
+  const handlePress = (injuryValue) => {
+    setOnboardingState((prev) => {
       const injuries = prev?.injuries ?? []
 
-      if (injurySlug === '') {
+      if (injuryValue === '' || injuryValue == null) {
         return { ...prev, injuries: [''] }
       }
 
-      const injuryItems = injuries.filter(i => i !== '')
+      const injuryItems = injuries.filter((i) => i !== '')
       if (injuries.includes('') || injuryItems.length === 0) {
-        return { ...prev, injuries: [injurySlug] }
+        return { ...prev, injuries: [injuryValue] }
       }
 
-      const filteredInjuries = injuryItems.includes(injurySlug)
-        ? injuryItems.filter(i => i !== injurySlug)
-        : [...injuryItems, injurySlug]
+      const filteredInjuries = injuryItems.includes(injuryValue)
+        ? injuryItems.filter((i) => i !== injuryValue)
+        : [...injuryItems, injuryValue]
 
       return { ...prev, injuries: filteredInjuries }
     })
   }
 
+  const onSubmitOnboarding = async () => {
+    const { gender, birthDate, bodyMetrics, goal, daysPerWeek, timePerSession, experience } = onboardingState
+    const userInfo = {
+      gender,
+      birthDate,
+      weight: bodyMetrics?.weight?.value,
+      height: bodyMetrics?.height?.value,
+      goal,
+      daysPerWeek,
+      timePerSession,
+      currentLayer: experience === 'new' ? 1 : 2,
+      isPremium: false
+    }
+
+    await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
+    router.push(ROUTES_NAMES.PREPARING_PLAN)
+  }
+
+  if (!injuryOptions.length) {
+    return null
+  }
+
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.content}>
-          {ONBOARDING.INJURIES.map((injury, index) => (
+          {injuryOptions.map((option) => (
             <InjuriesCard
-              key={index}
-              injury={injury.title}
-              onPress={() => handlePress(injury.slug)}
-              selected={onboardingState?.injuries?.includes(injury.slug)}
+              key={option.value}
+              injury={option.label}
+              onPress={() => handlePress(option.value)}
+              selected={onboardingState?.injuries?.includes(option.value)}
             />
           ))}
         </View>
@@ -58,16 +88,15 @@ export default function InjuriesScreen() {
       </View>
       <Button
         text={t('COMMON.CONTINUE')}
-        type={(onboardingState?.injuries?.length ?? 0) > 0 ? 'main' : 'disabled'}
-        onPress={() => router.push('/onboarding/summary')}
+        type={(onboardingState?.injuries?.length ?? 0) > 0 ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
+        onPress={onSubmitOnboarding}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   contentContainer: {

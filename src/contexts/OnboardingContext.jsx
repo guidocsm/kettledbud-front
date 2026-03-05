@@ -1,18 +1,19 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { useOnboardingConfig } from '../features/onboarding/hooks/useOnboardingConfig'
 
 const OnboardingContext = createContext(null)
 
 export function OnboardingProvider({ children }) {
-  const [onboardingState, setOnboardingState] = useState({})
+  const [onboardingState, setOnboardingState] = useState(null)
 
-  const setAnswer = useCallback((key, value) => {
-    setAnswersState(prev => ({ ...prev, [key]: value }))
-  }, [])
+  const onboardingConfig = useOnboardingConfig()
 
-  const value = useMemo(
-    () => ({ onboardingState, setOnboardingState }),
-    [onboardingState, setOnboardingState]
-  )
+  const value = useMemo(() => ({
+    onboardingState,
+    setOnboardingState,
+    onboardingConfig,
+  }),
+  [onboardingState, setOnboardingState, onboardingConfig])
 
   return (
     <OnboardingContext.Provider value={value}>

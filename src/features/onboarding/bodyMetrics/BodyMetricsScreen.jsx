@@ -1,17 +1,19 @@
-import { StyleSheet, View } from 'react-native'
-import { useOnboarding } from '@/src/contexts/OnboardingContext'
-import { BodyWeightPicker } from '@/src/components/BodyWeightPicker'
-import { Button } from '@/src/components/Button'
+import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
+import { StyleSheet, View } from 'react-native'
+
+import { BodyHeightPicker } from '@/src/components/BodyHeightPicker'
+import { BodyWeightPicker } from '@/src/components/BodyWeightPicker'
+import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
-import { useRouter } from 'expo-router'
-import { BodyHeightPicker } from '@/src/components/BodyHeightPicker'
+import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import {
   BODY_METRICS_KEYS,
   UNIT_HEIGHT_CM,
   UNIT_WEIGHT_KG,
 } from '@/src/features/onboarding/bodyMetrics/utils/constants'
+import PageWrapper from '@/src/components/PageWrapper'
 
 export default function BodyMetricsScreen() {
   const { onboardingState, setOnboardingState } = useOnboarding()
@@ -34,7 +36,7 @@ export default function BodyMetricsScreen() {
   const canContinue = onboardingState?.bodyMetrics?.height && onboardingState?.bodyMetrics?.weight
 
   return (
-    <View style={styles.container}>
+    <PageWrapper style={styles.container}>
       <View style={styles.content}>
         <View style={styles.pickersRow}>
           <View style={styles.pickerHalf}>
@@ -60,18 +62,17 @@ export default function BodyMetricsScreen() {
       </View>
       <Button
         text={t('COMMON.CONTINUE')}
-        type={canContinue ? 'main' : 'disabled'}
+        type={canContinue ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
         onPress={() => {
           router.push('/onboarding/injuries')
         }}
       />
-    </View>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   content: {

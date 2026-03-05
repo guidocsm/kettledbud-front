@@ -1,31 +1,43 @@
-import { View, StyleSheet } from 'react-native'
-import { useTranslation } from 'react-i18next'
-import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
-import { colors } from '@/src/constants/theme'
-import { ONBOARDING } from '@/src/features/onboarding/utils/constants'
-import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { useRouter } from 'expo-router'
+import { View, StyleSheet } from 'react-native'
+
+import { MaleIcon, FemaleIcon, LineIcon } from '@/assets/Icons'
+import { colors } from '@/src/constants/theme'
+import { useOnboarding } from '@/src/contexts/OnboardingContext'
+import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import { GENDER_STEP } from '../utils/constants'
 
 export default function GenderScreen() {
-  const { t } = useTranslation()
   const router = useRouter()
-  const { onboardingState, setOnboardingState } = useOnboarding()
+  const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
 
-  const handlePress = (slug) => {
-    setOnboardingState(prev => ({ ...prev, gender: slug }))
-    router.push('/onboarding/birthday')
+  const handlePress = (option) => {
+    setOnboardingState((prev) => ({ ...prev, gender: option.value }))
+    router.push(ROUTES_NAMES.BIRTH_DATE)
+  }
+
+  const genderOptions = onboardingConfig?.genderOptions?.map((option) => ({
+    ...option,
+    icon: GENDER_STEP.ICONS[option.value] ?? LineIcon,
+  })) ?? []
+
+  if (!genderOptions.length) {
+    return null
   }
 
   return (
     <View style={styles.container}>
-      {ONBOARDING.GENDER.map((option, index) => {
+      {genderOptions.map((option, index) => {
+        const IconComponent = option.icon
+        const isSelected = onboardingState?.gender === option.value
         return (
           <OnboardingCard
-            key={index}
-            icon={<option.icon color={onboardingState?.gender === option.slug ? colors.dark : colors.main} />}
-            title={option.title}
-            onPress={() => handlePress(option.slug)}
-            selectedCard={onboardingState.gender === option.slug}
+            key={option.value ?? index}
+            icon={<IconComponent color={isSelected ? colors.dark : colors.main} />}
+            label={option.label}
+            onPress={() => handlePress(option)}
+            selectedCard={isSelected}
           />
         )
       })}

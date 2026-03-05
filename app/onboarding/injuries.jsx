@@ -1,4 +1,4 @@
-import InjuriesScreen from "@/src/features/onboarding/injury/InjuriesScreen";
+import InjuriesScreen from '@/src/features/onboarding/injury/InjuriesScreen'
 
 
 export default function InjuryScreen() {

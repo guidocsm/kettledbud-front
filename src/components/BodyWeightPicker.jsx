@@ -1,9 +1,10 @@
-import { View, StyleSheet, Pressable, Platform } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
+import { View, StyleSheet, Pressable, Platform } from 'react-native'
+
 import CustomText from '@/src/components/CustomText'
 import { colors, fontDisplay } from '@/src/constants/theme'
-import { useBodyWeight } from '@/src/hooks/useBodyWeight'
 import { UNIT_WEIGHT_KG, UNIT_WEIGHT_LB } from '@/src/features/onboarding/bodyMetrics/utils/constants'
+import { useBodyWeight } from '@/src/hooks/useBodyWeight'
 
 export function BodyWeightPicker({ initialWeight, unit: initialUnit = UNIT_WEIGHT_KG, onWeightChange }) {
   const { weight, unit, values, handleValueChange, switchUnit } = useBodyWeight({

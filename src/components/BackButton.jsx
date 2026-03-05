@@ -1,8 +1,10 @@
 import { useRouter } from 'expo-router'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import CustomText from './CustomText'
-import { colors } from '../constants/theme'
+
 import { BackIcon } from '../../assets/Icons'
+import { colors } from '../constants/theme'
+
+import CustomText from './CustomText'
 
 export function BackButton({ style }) {
   const router = useRouter()

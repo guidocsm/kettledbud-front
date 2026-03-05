@@ -1,4 +1,4 @@
-import GenderScreen from "@/src/features/onboarding/gender/GenderScreen";
+import GenderScreen from '@/src/features/onboarding/gender/GenderScreen'
 
 
 export default function gender() {
