@@ -6,7 +6,10 @@ import { FormField } from '@/src/components/FormField'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import { signInWithGoogle } from '@/src/services/googleAuth'
+import { flushOnboardingData } from '@/src/services/onboarding/flushOnboardingData'
+import { saveUserPlan } from '@/src/services/onboarding/saveUserPlan'
 import { sendMagicLink } from '@/src/services/supabase/magicLinkAuth'
+import { supabase } from '@/src/services/supabase/supabase'
 import { signUpValidations } from '@/validations/auth/signUpValidations'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
@@ -37,7 +40,14 @@ export default function SignUp({ visible = false, onClose, onSentEmail }) {
     try {
       const data = await signInWithGoogle()
       if (data) {
-        console.log('entro')
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        await flushOnboardingData()
+        await saveUserPlan()
         router.replace(ROUTES_NAMES.HOME)
         AsyncStorage.removeItem('previewPlan')
       }

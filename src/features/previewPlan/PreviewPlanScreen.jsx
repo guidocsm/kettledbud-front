@@ -27,6 +27,8 @@ export default function PreviewPlanScreen() {
     const fetchPreviewPlan = async () => {
       const previewPlanAsync = await AsyncStorage.getItem('previewPlan')
       const userDataAsync = await AsyncStorage.getItem('userInfo')
+      const previewPlanIdAsync = await AsyncStorage.getItem('previewPlanId')
+
       setPreviewPlan(JSON.parse(previewPlanAsync))
       setUserData(JSON.parse(userDataAsync))
     }

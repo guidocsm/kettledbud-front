@@ -4,9 +4,9 @@ import { Image, StyleSheet, View } from 'react-native'
 
 import { Button } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
-import PageWrapper from '@/src/components/PageWrapper'
 
 function InitScreen() {
   const router = useRouter()
@@ -14,12 +14,8 @@ function InitScreen() {
 
   return (
     <PageWrapper style={styles.container}>
-      <Image
-        source={require('@/assets/images/kettlebud-logo.png')}
-      />
-      <Image
-        source={require('@/assets/images/kettlebud.png')}
-      />
+      <Image source={require('@/assets/images/kettlebud-logo.png')} />
+      <Image source={require('@/assets/images/kettlebud.png')} />
       <CustomText
         text={t('INIT.SUBTITLE')}
         lineHeight={26}
@@ -35,7 +31,7 @@ function InitScreen() {
         />
         <Button
           text="Ya tengo cuenta"
-          onPress={() => { }}
+          onPress={() => {}}
           textColor={colors.main}
           style={styles.button}
           type="outline"

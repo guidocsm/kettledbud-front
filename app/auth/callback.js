@@ -1,4 +1,6 @@
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import { flushOnboardingData } from '@/src/services/onboarding/flushOnboardingData'
+import { saveUserPlan } from '@/src/services/onboarding/saveUserPlan'
 import { supabase } from '@/src/services/supabase/supabase'
 import * as Linking from 'expo-linking'
 import { useRouter } from 'expo-router'
@@ -36,6 +38,8 @@ export default function AuthCallback() {
         } = await supabase.auth.getSession()
 
         if (session) {
+          await flushOnboardingData()
+          await saveUserPlan()
           router.replace(ROUTES_NAMES.HOME)
         } else {
           router.replace(ROUTES_NAMES.PREVIEW_PLAN)

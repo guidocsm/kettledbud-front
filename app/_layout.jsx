@@ -19,8 +19,6 @@ const PUBLIC_ROUTES = [
   ROUTES_NAMES.PREVIEW_PLAN,
 ]
 
-// configureGoogleSignIn()
-
 export default function IndexLayout() {
   const { fontsLoaded, fontError } = useAppFonts()
   const insets = useSafeAreaInsets()

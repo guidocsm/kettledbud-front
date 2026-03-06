@@ -27,7 +27,7 @@ export function useProtectedRoute() {
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession()
       const previewPlan = await AsyncStorage.getItem('previewPlan')
-      console.log('previewPlan', previewPlan)
+
       if (data.session) {
         router.replace(ROUTES_NAMES.HOME)
       } else if (previewPlan) {

@@ -1,19 +1,20 @@
-import { useState, useEffect, useRef, memo } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Animated,
-  Easing,
-  Dimensions,
-} from 'react-native'
-import { useRouter } from 'expo-router'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
-import apiClient from '@/src/services/apiClient'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import apiClient from '@/src/services/apiClient'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Crypto from 'expo-crypto'
+import { useRouter } from 'expo-router'
+import { memo, useEffect, useRef, useState } from 'react'
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 
 const COLORS = {
   cream: '#FFF8F0',
@@ -44,7 +45,7 @@ const FloatingParticles = memo(function FloatingParticles() {
     PARTICLES.map(() => ({
       translateY: new Animated.Value(0),
       opacity: new Animated.Value(0),
-    }))
+    })),
   ).current
 
   useEffect(() => {
@@ -81,7 +82,7 @@ const FloatingParticles = memo(function FloatingParticles() {
               useNativeDriver: true,
             }),
           ]),
-        ])
+        ]),
       ).start()
     })
   }, [])
@@ -113,7 +114,7 @@ const CelebrationSparkles = memo(function CelebrationSparkles() {
     Array.from({ length: 6 }, () => ({
       scale: new Animated.Value(0),
       opacity: new Animated.Value(0),
-    }))
+    })),
   ).current
 
   useEffect(() => {
@@ -214,7 +215,7 @@ export default function PreparingPlan({
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start()
   }, [])
 
@@ -230,7 +231,10 @@ export default function PreparingPlan({
     }).start()
 
     const fetchPlan = async () => {
+      const previewPlanId = Crypto.randomUUID()
+
       const payload = {
+        previewPlanId,
         goal: onboardingState?.goal,
         experience: onboardingState?.experience,
         daysPerWeek: onboardingState?.daysPerWeek,
@@ -253,6 +257,7 @@ export default function PreparingPlan({
             navigatedRef.current = true
 
             await AsyncStorage.setItem('previewPlan', JSON.stringify(data))
+            await AsyncStorage.setItem('previewPlanId', previewPlanId)
             router.replace(ROUTES_NAMES.PREVIEW_PLAN)
           })
         })
@@ -263,7 +268,9 @@ export default function PreparingPlan({
 
     fetchPlan()
 
-    return () => { mounted = false }
+    return () => {
+      mounted = false
+    }
   }, [])
 
   // ─── Typewriter step transitions (visual only) ─────────
@@ -313,10 +320,7 @@ export default function PreparingPlan({
           onComplete={handleTypewriterComplete}
         >
           <Text
-            style={[
-              styles.bubbleText,
-              isComplete && styles.bubbleTextComplete,
-            ]}
+            style={[styles.bubbleText, isComplete && styles.bubbleTextComplete]}
           >
             {currentStepData.message}
           </Text>
@@ -350,10 +354,7 @@ export default function PreparingPlan({
       <View style={styles.progressBarContainer}>
         <View style={styles.progressBarTrack}>
           <Animated.View
-            style={[
-              styles.progressBarFill,
-              { width: progressWidth },
-            ]}
+            style={[styles.progressBarFill, { width: progressWidth }]}
           />
         </View>
 
