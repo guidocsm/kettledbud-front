@@ -10,7 +10,9 @@ const MONTH_LABELS = [
 ]
 
 const currentYear = new Date().getFullYear()
-const YEARS = Array.from({ length: 120 }, (_, i) => currentYear - i)
+/** Año máximo seleccionable: hoy menos 16 años (edad mínima 16) */
+const MAX_BIRTH_YEAR = currentYear - 16
+const YEARS = Array.from({ length: 120 }, (_, i) => MAX_BIRTH_YEAR - i)
 const DAYS = Array.from({ length: 31 }, (_, i) => i + 1)
 
 export function DatePicker({ initialDate, onDateChange }) {

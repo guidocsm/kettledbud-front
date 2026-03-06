@@ -38,10 +38,11 @@
       }
     },
     "BRIDGE": {
-      "DESCRIPTION": "¡Casi listo! Ahora necesito saber un poco más sobre ti para afinar tu rutina al máximo. <bold>Algunos datos son opcionales</bold>, comparte solo lo que quieras."
+      "DESCRIPTION": "¡Casi listo! Necesito algunos datos más para crear una rutina que encaje contigo de verdad. Son preguntas rápidas, ¡en un minuto lo tienes!"
     },
     "BIRTHDAY": {
-      "DISCLAIMER": "Tu edad me ayuda a adaptar la intensidad del plan."
+      "DISCLAIMER": "Tu edad me ayuda a adaptar la intensidad del plan.",
+      "UNDER_AGE_ERROR": "Debes ser mayor de 16 años"
     },
     "BODY_METRICS": {
       "HEIGHT": {

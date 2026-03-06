@@ -1,7 +1,10 @@
 import '@/src/i18n'
 import { Stack } from 'expo-router'
 import { StyleSheet } from 'react-native'
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
 import { useAppFonts } from '@/src/hooks/useAppFonts'
 
@@ -33,6 +36,7 @@ export default function IndexLayout() {
         <Stack.Screen name="init" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="previewPlan" />
+        <Stack.Screen name="home" />
       </Stack>
     </SafeAreaProvider>
   )

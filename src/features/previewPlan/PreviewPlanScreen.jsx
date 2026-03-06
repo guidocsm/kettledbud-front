@@ -8,7 +8,8 @@ import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Signup from '../auth/Signup'
+import SentEmail from '../auth/SentEmail'
+import SignUp from '../auth/SignUp'
 import { PreviewKettlebiMessage } from './components/PreviewKettlebiMessage'
 import { SummaryUserPlan } from './components/SummaryUserPlan'
 import { WeeklyPlan } from './components/WeeklyPlan'
@@ -17,6 +18,7 @@ export default function PreviewPlanScreen() {
   const [previewPlan, setPreviewPlan] = useState(null)
   const [userData, setUserData] = useState(null)
   const [openSignup, setOpenSignup] = useState(false)
+  const [isSentEmail, setIsSentEmail] = useState(false)
 
   const { t } = useTranslation()
   const router = useRouter()
@@ -35,6 +37,11 @@ export default function PreviewPlanScreen() {
     await AsyncStorage.removeItem('previewPlan')
     await AsyncStorage.removeItem('userInfo')
     router.replace(ROUTES_NAMES.INIT)
+  }
+
+  const onSentEmail = () => {
+    setIsSentEmail(true)
+    setOpenSignup(false)
   }
 
   return (
@@ -65,7 +72,12 @@ export default function PreviewPlanScreen() {
           </TouchableOpacity>
         </View>
       </PageWrapper>
-      <Signup visible={openSignup} onClose={() => setOpenSignup(false)} />
+      <SignUp
+        visible={openSignup}
+        onClose={() => setOpenSignup(false)}
+        onSentEmail={onSentEmail}
+      />
+      <SentEmail visible={isSentEmail} onClose={() => setIsSentEmail(false)} />
     </>
   )
 }

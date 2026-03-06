@@ -4,8 +4,10 @@ import { CustomModal } from '@/src/components/CustomModal'
 import CustomText from '@/src/components/CustomText'
 import { FormField } from '@/src/components/FormField'
 import { colors } from '@/src/constants/theme'
+import { sendMagicLink } from '@/src/services/supabase/magicLinkAuth'
 import { signUpValidations } from '@/validations/auth/signUpValidations'
 import { Formik } from 'formik'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Image,
@@ -15,10 +17,15 @@ import {
   View,
 } from 'react-native'
 
-export default function Signup({ visible = false, onClose }) {
+export default function SignUp({ visible = false, onClose, onSentEmail }) {
   const { t } = useTranslation()
-  const onSubmit = (values) => {
-    console.log(values)
+  const [isSendingEmail, setIsSendingEmail] = useState(false)
+
+  const onSubmit = async (values) => {
+    setIsSendingEmail(true)
+    await sendMagicLink(values.email)
+    setIsSendingEmail(false)
+    onSentEmail()
   }
 
   return (
@@ -69,7 +76,9 @@ export default function Signup({ visible = false, onClose }) {
                   keyboardType="email-address"
                 />
                 <Button
-                  type={BUTTON_TYPES.MAIN}
+                  type={
+                    isSendingEmail ? BUTTON_TYPES.DISABLED : BUTTON_TYPES.MAIN
+                  }
                   text={t('COMMON.CONTINUE')}
                   onPress={handleSubmit}
                 />

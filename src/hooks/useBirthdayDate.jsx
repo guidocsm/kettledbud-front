@@ -1,6 +1,24 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 const currentYear = new Date().getFullYear()
+
+/** Fecha por defecto: exactamente 16 años antes de hoy (edad mínima 16) */
+export function getDefaultBirthDate() {
+  const date = new Date()
+  date.setFullYear(date.getFullYear() - 16)
+  return date
+}
+
+/** Indica si la fecha de nacimiento corresponde a una persona que ya cumplió 16 años */
+export function isAtLeast16(birthDate) {
+  if (!birthDate) return false
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const sixteenth = new Date(birthDate)
+  sixteenth.setFullYear(sixteenth.getFullYear() + 16)
+  sixteenth.setHours(0, 0, 0, 0)
+  return today.getTime() >= sixteenth.getTime()
+}
 
 function getDaysInMonth(year, month) {
   return new Date(year, month, 0).getDate()
@@ -23,11 +41,13 @@ function parseInitialDate(value) {
   return Number.isNaN(date.getTime()) ? null : date
 }
 
-
-export function useBirthdayDate({ initialDate: initialDateProp, onDateChange } = {}) {
+export function useBirthdayDate({
+  initialDate: initialDateProp,
+  onDateChange,
+} = {}) {
   const resolvedInitial = useMemo(() => {
     const parsed = parseInitialDate(initialDateProp)
-    return parsed ?? new Date()
+    return parsed ?? getDefaultBirthDate()
   }, [initialDateProp])
 
   const [day, setDay] = useState(resolvedInitial.getDate())
@@ -42,7 +62,7 @@ export function useBirthdayDate({ initialDate: initialDateProp, onDateChange } =
       const date = buildDate(d, m, y)
       if (date) onDateChange?.(date)
     },
-    [onDateChange]
+    [onDateChange],
   )
 
   const handleDayChange = useCallback(
@@ -52,7 +72,7 @@ export function useBirthdayDate({ initialDate: initialDateProp, onDateChange } =
       setDay(newDay)
       persistDate(newDay, month, year)
     },
-    [month, year, persistDate]
+    [month, year, persistDate],
   )
 
   const handleMonthChange = useCallback(
@@ -65,7 +85,7 @@ export function useBirthdayDate({ initialDate: initialDateProp, onDateChange } =
       setDay(safeDayForMonth)
       persistDate(safeDayForMonth, newMonth, year)
     },
-    [day, year, persistDate]
+    [day, year, persistDate],
   )
 
   const handleYearChange = useCallback(
@@ -78,7 +98,7 @@ export function useBirthdayDate({ initialDate: initialDateProp, onDateChange } =
       setDay(safeDayForYear)
       persistDate(safeDayForYear, month, newYear)
     },
-    [day, month, persistDate]
+    [day, month, persistDate],
   )
 
   return {
