@@ -12,7 +12,7 @@ export default function AuthCallback() {
     const handleCallback = async () => {
       try {
         const url = await Linking.getInitialURL()
-        console.log('Full URL:', url)
+
         if (!url) return
 
         const fragment = url.split('#')[1]
@@ -28,19 +28,12 @@ export default function AuthCallback() {
             refresh_token: params.refresh_token,
           })
 
-          console.log(
-            'setSession result:',
-            JSON.stringify({ data, error }, null, 2),
-          )
-
           if (error) throw error
         }
 
-        // Verifica si la sesión quedó guardada
         const {
           data: { session },
         } = await supabase.auth.getSession()
-        console.log('Session after set:', session ? 'ACTIVA' : 'NULL')
 
         if (session) {
           router.replace(ROUTES_NAMES.HOME)

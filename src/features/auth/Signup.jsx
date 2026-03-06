@@ -4,8 +4,12 @@ import { CustomModal } from '@/src/components/CustomModal'
 import CustomText from '@/src/components/CustomText'
 import { FormField } from '@/src/components/FormField'
 import { colors } from '@/src/constants/theme'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import { signInWithGoogle } from '@/src/services/googleAuth'
 import { sendMagicLink } from '@/src/services/supabase/magicLinkAuth'
 import { signUpValidations } from '@/validations/auth/signUpValidations'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRouter } from 'expo-router'
 import { Formik } from 'formik'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,12 +24,26 @@ import {
 export default function SignUp({ visible = false, onClose, onSentEmail }) {
   const { t } = useTranslation()
   const [isSendingEmail, setIsSendingEmail] = useState(false)
+  const router = useRouter()
 
   const onSubmit = async (values) => {
     setIsSendingEmail(true)
     await sendMagicLink(values.email)
     setIsSendingEmail(false)
     onSentEmail()
+  }
+
+  const onSignInWithGoogle = async () => {
+    try {
+      const data = await signInWithGoogle()
+      if (data) {
+        console.log('entro')
+        router.replace(ROUTES_NAMES.HOME)
+        AsyncStorage.removeItem('previewPlan')
+      }
+    } catch (err) {
+      console.log('error', err)
+    }
   }
 
   return (
@@ -98,7 +116,7 @@ export default function SignUp({ visible = false, onClose, onSentEmail }) {
           <View style={styles.separatorLine} />
         </View>
         <View style={styles.buttonsContainer}>
-          <Pressable style={styles.googleButton}>
+          <Pressable style={styles.googleButton} onPress={onSignInWithGoogle}>
             <GoogleIcon width={20} height={20} color={colors.dark} />
             <CustomText
               text={t('AUTH.GOOGLE.TITLE')}
