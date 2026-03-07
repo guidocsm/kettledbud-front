@@ -1,15 +1,15 @@
-import { 
-  HeartIcon, 
-  BurnIcon, 
-  DumbbellIcon,
-  SeedIcon,
-  CycleIcon,
-  MuscleIcon,
-  ThunderIcon,
+import {
+  BurnIcon,
   ClockIcon,
-  MaleIcon,
+  CycleIcon,
+  DumbbellIcon,
   FemaleIcon,
+  HeartIcon,
   LineIcon,
+  MaleIcon,
+  MuscleIcon,
+  SeedIcon,
+  ThunderIcon,
 } from '@/assets/Icons'
 
 export const STEP_CONFIG = [
@@ -67,7 +67,7 @@ export const EXPERIENCE_STEP = {
     NEW: 'new',
     RETURNING: 'returning',
     ACTIVE: 'active',
-  }
+  },
 }
 
 export const TIME_PER_WORKOUT_STEP = {
@@ -80,14 +80,14 @@ export const TIME_PER_WORKOUT_STEP = {
 
 export const GENDER_STEP = {
   ICONS: {
-    M: MaleIcon,
-    F: FemaleIcon,
+    male: MaleIcon,
+    female: FemaleIcon,
     prefer_not_to_say: LineIcon,
   },
 }
 
 export const GOALS_KEYS = {
-  'feel_better': 'FEEL_BETTER',
-  'lose_fat': 'LOSE_FAT',
-  'gain_muscle': 'GAIN_MUSCLE',
+  feel_better: 'FEEL_BETTER',
+  lose_fat: 'LOSE_FAT',
+  gain_muscle: 'GAIN_MUSCLE',
 }

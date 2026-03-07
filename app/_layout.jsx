@@ -15,8 +15,8 @@ import { useProtectedRoute } from '../src/hooks/useProtectedRoute'
 const PUBLIC_ROUTES = [
   ROUTES_NAMES.INIT,
   ROUTES_NAMES.ONBOARDING,
-  ROUTES_NAMES.SIGN_UP,
   ROUTES_NAMES.PREVIEW_PLAN,
+  ROUTES_NAMES.AUTH,
 ]
 
 export default function IndexLayout() {
@@ -49,6 +49,7 @@ export default function IndexLayout() {
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="previewPlan" />
         <Stack.Screen name="home" />
+        <Stack.Screen name="auth/callback" />
       </Stack>
     </SafeAreaProvider>
   )

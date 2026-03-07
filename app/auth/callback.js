@@ -7,6 +7,38 @@ import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
+async function processAuthUrl(url, router) {
+  const fragment = url.split('#')[1]
+  if (!fragment) {
+    router.replace(ROUTES_NAMES.PREVIEW_PLAN)
+    return
+  }
+
+  const params = Object.fromEntries(
+    fragment.split('&').map((pair) => pair.split('=')),
+  )
+
+  if (params.access_token && params.refresh_token) {
+    const { error } = await supabase.auth.setSession({
+      access_token: params.access_token,
+      refresh_token: params.refresh_token,
+    })
+    if (error) throw error
+  }
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (session) {
+    await flushOnboardingData()
+    await saveUserPlan()
+    router.replace(ROUTES_NAMES.HOME)
+  } else {
+    router.replace(ROUTES_NAMES.PREVIEW_PLAN)
+  }
+}
+
 export default function AuthCallback() {
   const router = useRouter()
 
@@ -14,43 +46,25 @@ export default function AuthCallback() {
     const handleCallback = async () => {
       try {
         const url = await Linking.getInitialURL()
-
-        if (!url) return
-
-        const fragment = url.split('#')[1]
-        if (!fragment) return
-
-        const params = Object.fromEntries(
-          fragment.split('&').map((pair) => pair.split('=')),
-        )
-
-        if (params.access_token && params.refresh_token) {
-          const { data, error } = await supabase.auth.setSession({
-            access_token: params.access_token,
-            refresh_token: params.refresh_token,
-          })
-
-          if (error) throw error
-        }
-
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
-
-        if (session) {
-          await flushOnboardingData()
-          await saveUserPlan()
-          router.replace(ROUTES_NAMES.HOME)
-        } else {
-          router.replace(ROUTES_NAMES.PREVIEW_PLAN)
-        }
+        if (url) await processAuthUrl(url, router)
       } catch (err) {
-        console.error('Auth callback error:', JSON.stringify(err))
+        console.error('Auth callback error:', err)
         router.replace(ROUTES_NAMES.PREVIEW_PLAN)
       }
     }
 
+    const subscription = Linking.addEventListener('url', async ({ url }) => {
+      try {
+        await processAuthUrl(url, router)
+      } catch (err) {
+        console.error('Auth callback error:', err)
+        router.replace(ROUTES_NAMES.PREVIEW_PLAN)
+      }
+    })
+
     handleCallback()
+
+    return () => subscription.remove()
   }, [])
 
   return (

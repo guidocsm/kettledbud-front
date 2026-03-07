@@ -6,13 +6,21 @@ import { supabase } from '@/src/services/supabase/supabase'
 import { getProfile } from '@/src/services/user/getProfile'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
+import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
 export default function home() {
   const router = useRouter()
-  const userInfo = async () => {
-    const userInfo = await getProfile()
-  }
+  const [userInfo, setUserInfo] = useState(null)
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userInfo = await getProfile()
+      const session = await supabase.auth.getSession()
+      setUserInfo({ ...userInfo, email: session.data.session.user.email })
+    }
+    fetchUserInfo()
+  }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -21,11 +29,31 @@ export default function home() {
     await AsyncStorage.removeItem('previewPlanId')
     router.replace(ROUTES_NAMES.INIT)
   }
+
   return (
     <View>
-      <CustomText color={colors.main} text="Home" />
-      <Button text="Sign out" onPress={handleLogout} />
-      <Button text="Get user info" onPress={() => userInfo()} />
+      <CustomText color={colors.main} text={`Email: ${userInfo?.email}`} />
+      <CustomText color={colors.main} text={`Gender: ${userInfo?.gender}`} />
+      <CustomText
+        color={colors.main}
+        text={`Birth Date: ${userInfo?.birthDate}`}
+      />
+      <CustomText color={colors.main} text={`Weight: ${userInfo?.weight}`} />
+      <CustomText color={colors.main} text={`Height: ${userInfo?.height}`} />
+      <CustomText color={colors.main} text={`Goal: ${userInfo?.goal}`} />
+      <CustomText
+        color={colors.main}
+        text={`Days Per Week: ${userInfo?.daysPerWeek}`}
+      />
+      <CustomText
+        color={colors.main}
+        text={`Time Per Session: ${userInfo?.timePerSession}`}
+      />
+      <CustomText
+        color={colors.main}
+        text={`Experience: ${userInfo?.experience}`}
+      />
+      <Button text="Salir" onPress={handleLogout} />
     </View>
   )
 }
