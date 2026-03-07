@@ -1,19 +1,20 @@
-import { useState, useEffect, useRef, memo } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Animated,
-  Easing,
-  Dimensions,
-} from 'react-native'
-import { useRouter } from 'expo-router'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
-import apiClient from '@/src/services/apiClient'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import apiClient from '@/src/services/apiClient'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Crypto from 'expo-crypto'
+import { useRouter } from 'expo-router'
+import { memo, useEffect, useRef, useState } from 'react'
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 
 const COLORS = {
   cream: '#FFF8F0',
@@ -44,7 +45,7 @@ const FloatingParticles = memo(function FloatingParticles() {
     PARTICLES.map(() => ({
       translateY: new Animated.Value(0),
       opacity: new Animated.Value(0),
-    }))
+    })),
   ).current
 
   useEffect(() => {
@@ -81,7 +82,7 @@ const FloatingParticles = memo(function FloatingParticles() {
               useNativeDriver: true,
             }),
           ]),
-        ])
+        ]),
       ).start()
     })
   }, [])
@@ -113,7 +114,7 @@ const CelebrationSparkles = memo(function CelebrationSparkles() {
     Array.from({ length: 6 }, () => ({
       scale: new Animated.Value(0),
       opacity: new Animated.Value(0),
-    }))
+    })),
   ).current
 
   useEffect(() => {
@@ -173,11 +174,10 @@ const CelebrationSparkles = memo(function CelebrationSparkles() {
   )
 })
 
-const EXTRA_BUFFER_MS = 5000
+const POST_API_BUFFER_MS = 15000
 
 // ─── Main component ──────────────────────────────────────
 export default function PreparingPlan({
-  pauseBetweenSteps = 1200,
   typewriterSpeed = 40,
   mascotSource = require('@/assets/images/kettlebud-logo.png'),
   mascotWidth = 140,
@@ -189,14 +189,13 @@ export default function PreparingPlan({
   const router = useRouter()
 
   const [currentStep, setCurrentStep] = useState(0)
+  const [visibleStep, setVisibleStep] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
 
   const progressAnim = useRef(new Animated.Value(0)).current
   const bubbleOpacity = useRef(new Animated.Value(1)).current
   const bobAnim = useRef(new Animated.Value(0)).current
   const navigatedRef = useRef(false)
-
-  const isLastStep = currentStep === STEPS.length - 1
 
   // ─── Mascot bob ────────────────────────────────────────
   useEffect(() => {
@@ -214,23 +213,65 @@ export default function PreparingPlan({
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start()
   }, [])
+
+  // ─── Sync step dots with progress bar value ────────────
+  useEffect(() => {
+    const id = progressAnim.addListener(({ value }) => {
+      const newStep = Math.min(
+        Math.floor(value * STEPS.length),
+        STEPS.length - 1,
+      )
+      setCurrentStep((prev) => Math.max(prev, newStep))
+    })
+    return () => progressAnim.removeListener(id)
+  }, [])
+
+  // ─── Bubble transition on step change ─────────────────
+  useEffect(() => {
+    if (currentStep === visibleStep) return
+
+    Animated.timing(bubbleOpacity, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start(() => {
+      setVisibleStep(currentStep)
+      requestAnimationFrame(() => {
+        Animated.timing(bubbleOpacity, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }).start()
+      })
+    })
+  }, [currentStep, visibleStep])
+
+  useEffect(() => {
+    if (currentStep === STEPS.length - 1) {
+      setIsComplete(true)
+    }
+  }, [currentStep])
 
   // ─── API call + progress bar ───────────────────────────
   useEffect(() => {
     let mounted = true
 
+    // Phase 1: slow crawl while waiting for API (max ~30% over 30s)
     Animated.timing(progressAnim, {
-      toValue: 0.6,
-      duration: 12000,
+      toValue: 0.3,
+      duration: 30000,
       easing: Easing.out(Easing.quad),
       useNativeDriver: false,
     }).start()
 
     const fetchPlan = async () => {
+      const previewPlanId = Crypto.randomUUID()
+
       const payload = {
+        previewPlanId,
         goal: onboardingState?.goal,
         experience: onboardingState?.experience,
         daysPerWeek: onboardingState?.daysPerWeek,
@@ -242,10 +283,11 @@ export default function PreparingPlan({
 
         if (!mounted) return
 
+        // Phase 2: fill remaining progress over 15 seconds
         progressAnim.stopAnimation(() => {
           Animated.timing(progressAnim, {
             toValue: 1,
-            duration: EXTRA_BUFFER_MS,
+            duration: POST_API_BUFFER_MS,
             easing: Easing.linear,
             useNativeDriver: false,
           }).start(async ({ finished }) => {
@@ -253,6 +295,7 @@ export default function PreparingPlan({
             navigatedRef.current = true
 
             await AsyncStorage.setItem('previewPlan', JSON.stringify(data))
+            await AsyncStorage.setItem('previewPlanId', previewPlanId)
             router.replace(ROUTES_NAMES.PREVIEW_PLAN)
           })
         })
@@ -263,36 +306,12 @@ export default function PreparingPlan({
 
     fetchPlan()
 
-    return () => { mounted = false }
+    return () => {
+      mounted = false
+    }
   }, [])
 
-  // ─── Typewriter step transitions (visual only) ─────────
-  const handleTypewriterComplete = () => {
-    if (isLastStep) {
-      setIsComplete(true)
-      return
-    }
-
-    setTimeout(() => {
-      Animated.timing(bubbleOpacity, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }).start(() => {
-        setCurrentStep((prev) => prev + 1)
-
-        requestAnimationFrame(() => {
-          Animated.timing(bubbleOpacity, {
-            toValue: 1,
-            duration: 150,
-            useNativeDriver: true,
-          }).start()
-        })
-      })
-    }, pauseBetweenSteps)
-  }
-
-  const currentStepData = STEPS[currentStep]
+  const visibleStepData = STEPS[visibleStep]
 
   const progressWidth = progressAnim.interpolate({
     inputRange: [0, 1],
@@ -306,19 +325,16 @@ export default function PreparingPlan({
       {/* FIX 5: Animated.View con opacity envuelve el bubble */}
       <Animated.View style={[styles.bubbleWrapper, { opacity: bubbleOpacity }]}>
         <TypewriterBubble
+          key={visibleStep}
           animated
           width={bubbleWidth}
           arrowDirection={bubbleArrowDirection}
           speed={typewriterSpeed}
-          onComplete={handleTypewriterComplete}
         >
           <Text
-            style={[
-              styles.bubbleText,
-              isComplete && styles.bubbleTextComplete,
-            ]}
+            style={[styles.bubbleText, isComplete && styles.bubbleTextComplete]}
           >
-            {currentStepData.message}
+            {visibleStepData.message}
           </Text>
         </TypewriterBubble>
       </Animated.View>
@@ -350,10 +366,7 @@ export default function PreparingPlan({
       <View style={styles.progressBarContainer}>
         <View style={styles.progressBarTrack}>
           <Animated.View
-            style={[
-              styles.progressBarFill,
-              { width: progressWidth },
-            ]}
+            style={[styles.progressBarFill, { width: progressWidth }]}
           />
         </View>
 

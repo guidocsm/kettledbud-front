@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { MaleIcon, FemaleIcon, LineIcon } from '@/assets/Icons'
+import { LineIcon } from '@/assets/Icons'
 import { colors } from '@/src/constants/theme'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { OnboardingCard } from '@/src/features/onboarding/components/OnboardingCard'
@@ -10,17 +10,19 @@ import { GENDER_STEP } from '../utils/constants'
 
 export default function GenderScreen() {
   const router = useRouter()
-  const { onboardingConfig, onboardingState, setOnboardingState } = useOnboarding()
+  const { onboardingConfig, onboardingState, setOnboardingState } =
+    useOnboarding()
 
   const handlePress = (option) => {
     setOnboardingState((prev) => ({ ...prev, gender: option.value }))
     router.push(ROUTES_NAMES.BIRTH_DATE)
   }
 
-  const genderOptions = onboardingConfig?.genderOptions?.map((option) => ({
-    ...option,
-    icon: GENDER_STEP.ICONS[option.value] ?? LineIcon,
-  })) ?? []
+  const genderOptions =
+    onboardingConfig?.genderOptions?.map((option) => ({
+      ...option,
+      icon: GENDER_STEP.ICONS[option.value] ?? LineIcon,
+    })) ?? []
 
   if (!genderOptions.length) {
     return null
@@ -34,7 +36,9 @@ export default function GenderScreen() {
         return (
           <OnboardingCard
             key={option.value ?? index}
-            icon={<IconComponent color={isSelected ? colors.dark : colors.main} />}
+            icon={
+              <IconComponent color={isSelected ? colors.dark : colors.main} />
+            }
             label={option.label}
             onPress={() => handlePress(option)}
             selectedCard={isSelected}

@@ -1,5 +1,9 @@
 export const ROUTES_NAMES = {
+  AUTH: '/auth',
+  AUTH_CALLBACK: '/auth/callback',
+  HOME: '/home',
   INIT: '/init',
+  ONBOARDING: '/onboarding',
   WELCOME: '/onboarding/welcome',
   GOAL: '/onboarding/goal',
   EXPERIENCE: '/onboarding/experience',

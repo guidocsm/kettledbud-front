@@ -8,6 +8,8 @@ import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import SentEmail from '../auth/SentEmail'
+import SignUp from '../auth/SignUp'
 import { PreviewKettlebiMessage } from './components/PreviewKettlebiMessage'
 import { SummaryUserPlan } from './components/SummaryUserPlan'
 import { WeeklyPlan } from './components/WeeklyPlan'
@@ -15,6 +17,8 @@ import { WeeklyPlan } from './components/WeeklyPlan'
 export default function PreviewPlanScreen() {
   const [previewPlan, setPreviewPlan] = useState(null)
   const [userData, setUserData] = useState(null)
+  const [openSignup, setOpenSignup] = useState(false)
+  const [isSentEmail, setIsSentEmail] = useState(false)
 
   const { t } = useTranslation()
   const router = useRouter()
@@ -23,6 +27,8 @@ export default function PreviewPlanScreen() {
     const fetchPreviewPlan = async () => {
       const previewPlanAsync = await AsyncStorage.getItem('previewPlan')
       const userDataAsync = await AsyncStorage.getItem('userInfo')
+      const previewPlanIdAsync = await AsyncStorage.getItem('previewPlanId')
+
       setPreviewPlan(JSON.parse(previewPlanAsync))
       setUserData(JSON.parse(userDataAsync))
     }
@@ -35,33 +41,46 @@ export default function PreviewPlanScreen() {
     router.replace(ROUTES_NAMES.INIT)
   }
 
+  const onSentEmail = () => {
+    setIsSentEmail(true)
+    setOpenSignup(false)
+  }
+
   return (
-    <PageWrapper style={styles.container} isScrollView>
-      <PreviewKettlebiMessage />
-      <SummaryUserPlan
-        durationWeeks={previewPlan?.durationWeeks}
-        daysPerWeek={previewPlan?.daysPerWeek}
-        timePerSession={previewPlan?.timePerSession}
-        goal={previewPlan?.goal}
-      />
-      <WeeklyPlan previewPlan={previewPlan} />
-      <View style={styles.buttonContainer}>
-        <Button
-          text={t('PREVIEW_PLAN.SAVE_PLAN')}
-          onPress={() => console.log('Guardar mi plan')}
-          type={BUTTON_TYPES.MAIN}
+    <>
+      <PageWrapper style={styles.container} isScrollView>
+        <PreviewKettlebiMessage />
+        <SummaryUserPlan
+          durationWeeks={previewPlan?.durationWeeks}
+          daysPerWeek={previewPlan?.daysPerWeek}
+          timePerSession={previewPlan?.timePerSession}
+          goal={previewPlan?.goal}
         />
-        <TouchableOpacity onPress={handleStartAgain}>
-          <CustomText
-            text={t('PREVIEW_PLAN.START_AGAIN')}
-            color={colors.whiteLight}
-            fontSize={16}
-            fontWeight={600}
-            extraStyle={styles.exitButton}
+        <WeeklyPlan previewPlan={previewPlan} />
+        <View style={styles.buttonContainer}>
+          <Button
+            text={t('PREVIEW_PLAN.SAVE_PLAN')}
+            onPress={() => setOpenSignup(true)}
+            type={BUTTON_TYPES.MAIN}
           />
-        </TouchableOpacity>
-      </View>
-    </PageWrapper>
+          <TouchableOpacity onPress={handleStartAgain}>
+            <CustomText
+              text={t('PREVIEW_PLAN.START_AGAIN')}
+              color={colors.whiteLight}
+              fontSize={16}
+              fontWeight={600}
+              extraStyle={styles.exitButton}
+            />
+          </TouchableOpacity>
+        </View>
+      </PageWrapper>
+      <SignUp
+        visible={openSignup}
+        onClose={() => setOpenSignup(false)}
+        onSentEmail={onSentEmail}
+      />
+      <SentEmail visible={isSentEmail} onClose={() => setIsSentEmail(false)} />
+    </>
   )
 }
 

@@ -1,16 +1,28 @@
 import { Picker } from '@react-native-picker/picker'
-import { View, StyleSheet, Platform } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 
 import { colors } from '@/src/constants/theme'
 import { useBirthdayDate } from '@/src/hooks/useBirthdayDate'
 
 const MONTH_LABELS = [
-  'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+  'Ene',
+  'Feb',
+  'Mar',
+  'Abr',
+  'May',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dic',
 ]
 
 const currentYear = new Date().getFullYear()
-const YEARS = Array.from({ length: 120 }, (_, i) => currentYear - i)
+/** Año máximo seleccionable: hoy menos 16 años (edad mínima 16) */
+const MAX_BIRTH_YEAR = currentYear - 16
+const YEARS = Array.from({ length: 120 }, (_, i) => MAX_BIRTH_YEAR - i)
 const DAYS = Array.from({ length: 31 }, (_, i) => i + 1)
 
 export function DatePicker({ initialDate, onDateChange }) {
@@ -38,7 +50,12 @@ export function DatePicker({ initialDate, onDateChange }) {
           prompt={Platform.OS === 'android' ? 'Día' : undefined}
         >
           {DAYS.filter((d) => d <= maxDay).map((d) => (
-            <Picker.Item key={d} label={String(d)} value={d} color={colors.white} />
+            <Picker.Item
+              key={d}
+              label={String(d)}
+              value={d}
+              color={colors.white}
+            />
           ))}
         </Picker>
       </View>
@@ -52,7 +69,12 @@ export function DatePicker({ initialDate, onDateChange }) {
           prompt={Platform.OS === 'android' ? 'Mes' : undefined}
         >
           {MONTH_LABELS.map((label, i) => (
-            <Picker.Item key={i} label={label} value={i + 1} color={colors.white} />
+            <Picker.Item
+              key={i}
+              label={label}
+              value={i + 1}
+              color={colors.white}
+            />
           ))}
         </Picker>
       </View>
@@ -66,7 +88,12 @@ export function DatePicker({ initialDate, onDateChange }) {
           prompt={Platform.OS === 'android' ? 'Año' : undefined}
         >
           {YEARS.map((y) => (
-            <Picker.Item key={y} label={String(y)} value={y} color={colors.white} />
+            <Picker.Item
+              key={y}
+              label={String(y)}
+              value={y}
+              color={colors.white}
+            />
           ))}
         </Picker>
       </View>
