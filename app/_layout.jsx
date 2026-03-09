@@ -48,8 +48,8 @@ export default function IndexLayout() {
         <Stack.Screen name="init" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="previewPlan" />
-        <Stack.Screen name="home" />
         <Stack.Screen name="auth/callback" />
+        <Stack.Screen name="(tabs)" />
       </Stack>
     </SafeAreaProvider>
   )

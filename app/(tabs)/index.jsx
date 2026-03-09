@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
-export default function home() {
+export default function Home() {
   const router = useRouter()
   const [userInfo, setUserInfo] = useState(null)
 
@@ -17,7 +17,12 @@ export default function home() {
     const fetchUserInfo = async () => {
       const userInfo = await getProfile()
       const session = await supabase.auth.getSession()
-      setUserInfo({ ...userInfo, email: session.data.session.user.email })
+
+      try {
+        setUserInfo({ ...userInfo, email: session.data.session.user.email })
+      } catch (error) {
+        console.log('error fetching user info', error)
+      }
     }
     fetchUserInfo()
   }, [])
@@ -30,8 +35,12 @@ export default function home() {
     router.replace(ROUTES_NAMES.INIT)
   }
 
+  if (!userInfo) {
+    return null
+  }
+
   return (
-    <View>
+    <View style={{ backgroundColor: 'red', flex: 1 }}>
       <CustomText color={colors.main} text={`Email: ${userInfo?.email}`} />
       <CustomText color={colors.main} text={`Gender: ${userInfo?.gender}`} />
       <CustomText

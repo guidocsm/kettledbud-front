@@ -31,9 +31,14 @@ export default function SignUp({ visible = false, onClose, onSentEmail }) {
 
   const onSubmit = async (values) => {
     setIsSendingEmail(true)
-    await sendMagicLink(values.email)
-    setIsSendingEmail(false)
-    onSentEmail()
+    try {
+      await sendMagicLink(values.email)
+      onSentEmail()
+    } catch (error) {
+      console.log('error', error)
+    } finally {
+      setIsSendingEmail(false)
+    }
   }
 
   const onSignInWithGoogle = async () => {
