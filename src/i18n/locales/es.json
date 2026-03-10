@@ -97,5 +97,11 @@
       "DESCRIPTION": "Regístrate para guardar tu plan"
     },
     "OTHER_OPTIONS_LABEL": "Si lo prefieres:"
+  },
+  "TABS": {
+    "HOME": "Inicio",
+    "PROGRESS": "Progreso",
+    "EXPLORE": "Explorar",
+    "PROFILE": "Perfil"
   }
 }

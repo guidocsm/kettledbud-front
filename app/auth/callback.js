@@ -49,7 +49,7 @@ export default function AuthCallback() {
         if (url) await processAuthUrl(url, router)
       } catch (err) {
         console.error('Auth callback error:', err)
-        router.replace(ROUTES_NAMES.PREVIEW_PLAN)
+        router.replace(ROUTES_NAMES.INIT)
       }
     }
 
@@ -58,7 +58,7 @@ export default function AuthCallback() {
         await processAuthUrl(url, router)
       } catch (err) {
         console.error('Auth callback error:', err)
-        router.replace(ROUTES_NAMES.PREVIEW_PLAN)
+        router.replace(ROUTES_NAMES.INIT)
       }
     })
 

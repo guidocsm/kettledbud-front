@@ -36,7 +36,7 @@ export function useProtectedRoute() {
       const previewPlan = await AsyncStorage.getItem('previewPlan')
 
       if (data.session) {
-        router.replace(ROUTES_NAMES.TABS)
+        router.replace(ROUTES_NAMES.HOME)
       } else if (previewPlan) {
         router.replace(ROUTES_NAMES.PREVIEW_PLAN)
       } else {

@@ -6,12 +6,15 @@ import {
 } from '@/assets/Icons'
 import { colors } from '@/src/constants/theme'
 import { Tabs } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { Dimensions, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Tab } from './Tab'
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets()
+  const { t } = useTranslation()
+
   return (
     <Tabs
       screenOptions={{
@@ -31,7 +34,7 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Tab Icon={HomeIcon} focused={focused} label="Inicio" />
+            <Tab Icon={HomeIcon} focused={focused} label={t('TABS.HOME')} />
           ),
         }}
       />
@@ -39,7 +42,11 @@ export default function TabLayout() {
         name="progress"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Tab Icon={ProgressIcon} focused={focused} label="Progreso" />
+            <Tab
+              Icon={ProgressIcon}
+              focused={focused}
+              label={t('TABS.PROGRESS')}
+            />
           ),
         }}
       />
@@ -47,7 +54,11 @@ export default function TabLayout() {
         name="explore"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Tab Icon={ExploreIcon} focused={focused} label="Explorar" />
+            <Tab
+              Icon={ExploreIcon}
+              focused={focused}
+              label={t('TABS.EXPLORE')}
+            />
           ),
         }}
       />
@@ -55,7 +66,11 @@ export default function TabLayout() {
         name="profile"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Tab Icon={ProfileIcon} focused={focused} label="Perfil" />
+            <Tab
+              Icon={ProfileIcon}
+              focused={focused}
+              label={t('TABS.PROFILE')}
+            />
           ),
         }}
       />

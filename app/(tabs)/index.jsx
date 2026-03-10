@@ -1,30 +1,27 @@
-import { Button } from '@/src/components/Button'
+import { BurnIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import apiClient from '@/src/services/apiClient'
 import { supabase } from '@/src/services/supabase/supabase'
-import { getProfile } from '@/src/services/user/getProfile'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { useEffect } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 export default function Home() {
   const router = useRouter()
-  const [userInfo, setUserInfo] = useState(null)
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      const userInfo = await getProfile()
-      const session = await supabase.auth.getSession()
-
+    const fetchWeeklyStatus = async () => {
       try {
-        setUserInfo({ ...userInfo, email: session.data.session.user.email })
+        const response = await apiClient.get('/weekly-status')
+        console.log('weekly-status:', response)
       } catch (error) {
-        console.log('error fetching user info', error)
+        console.log('error fetching weekly status', error)
       }
     }
-    fetchUserInfo()
+    fetchWeeklyStatus()
   }, [])
 
   const handleLogout = async () => {
@@ -35,34 +32,58 @@ export default function Home() {
     router.replace(ROUTES_NAMES.INIT)
   }
 
-  if (!userInfo) {
-    return null
-  }
-
   return (
-    <View style={{ backgroundColor: 'red', flex: 1 }}>
-      <CustomText color={colors.main} text={`Email: ${userInfo?.email}`} />
-      <CustomText color={colors.main} text={`Gender: ${userInfo?.gender}`} />
-      <CustomText
-        color={colors.main}
-        text={`Birth Date: ${userInfo?.birthDate}`}
-      />
-      <CustomText color={colors.main} text={`Weight: ${userInfo?.weight}`} />
-      <CustomText color={colors.main} text={`Height: ${userInfo?.height}`} />
-      <CustomText color={colors.main} text={`Goal: ${userInfo?.goal}`} />
-      <CustomText
-        color={colors.main}
-        text={`Days Per Week: ${userInfo?.daysPerWeek}`}
-      />
-      <CustomText
-        color={colors.main}
-        text={`Time Per Session: ${userInfo?.timePerSession}`}
-      />
-      <CustomText
-        color={colors.main}
-        text={`Experience: ${userInfo?.experience}`}
-      />
-      <Button text="Salir" onPress={handleLogout} />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.weekTextWrapper}>
+          <CustomText
+            fontWeight={700}
+            fontSize={16}
+            text="Semana 1 de 12"
+            color={colors.whiteLight}
+            extraStyle={styles.weekText}
+          />
+        </View>
+        <View style={styles.streakContainer}>
+          <BurnIcon width={24} height={24} color={colors.main} />
+          <CustomText
+            fontWeight={800}
+            fontSize={20}
+            text="0"
+            color={colors.white}
+          />
+        </View>
+      </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.mainBackground,
+    paddingTop: 50,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    position: 'relative',
+    width: '100%',
+  },
+  weekTextWrapper: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  streakContainer: {
+    backgroundColor: '#252525',
+    borderRadius: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    gap: 10,
+  },
+})
