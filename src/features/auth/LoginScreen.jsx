@@ -1,11 +1,13 @@
 import { GoogleIcon } from '@/assets/Icons'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
-import { CustomModal } from '@/src/components/CustomModal'
 import CustomText from '@/src/components/CustomText'
 import { FormField } from '@/src/components/FormField'
+import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
 import { useSignIn } from '@/src/hooks/useSignIn'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import { signUpValidations } from '@/validations/auth/signUpValidations'
+import { useRouter } from 'expo-router'
 import { Formik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import {
@@ -17,7 +19,8 @@ import {
 } from 'react-native'
 import SentEmail from './SentEmail'
 
-export default function SignUp({ visible = false, onClose }) {
+export default function LoginScreen() {
+  const router = useRouter()
   const { t } = useTranslation()
 
   const {
@@ -33,15 +36,10 @@ export default function SignUp({ visible = false, onClose }) {
   }
 
   return (
-    <CustomModal visible={visible} onClose={onClose} transparent showBlur>
+    <PageWrapper style={styles.container}>
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image
-              source={require('@/assets/images/kettlebud-logo.png')}
-              style={styles.mascotImage}
-              resizeMode="contain"
-            />
             <Image
               source={require('@/assets/images/kettlebud.png')}
               style={styles.logoImage}
@@ -50,14 +48,14 @@ export default function SignUp({ visible = false, onClose }) {
           </View>
           <View style={styles.titleContainer}>
             <CustomText
-              text={t('AUTH.SIGNUP.ONBOARDING.TITLE')}
+              text="Accede a tu cuenta"
               fontSize={20}
               fontWeight={600}
               color={colors.white}
               extraStyle={styles.title}
             />
             <CustomText
-              text={t('AUTH.SIGNUP.ONBOARDING.DESCRIPTION')}
+              text="Y sigue construyendo tu progreso"
               fontSize={16}
               fontWeight={500}
               color={colors.whiteLight}
@@ -113,52 +111,54 @@ export default function SignUp({ visible = false, onClose }) {
               color={colors.dark}
             />
           </Pressable>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+        </View>
+        <View style={styles.registerContainer}>
+          <CustomText
+            text="¿Aún no tienes cuenta?"
+            fontSize={14}
+            fontWeight={500}
+            color={colors.whiteLight}
+          />
+          <TouchableOpacity
+            onPress={() => router.push(ROUTES_NAMES.WELCOME)}
+            style={styles.closeButton}
+          >
             <CustomText
-              text={t('COMMON.CLOSE')}
+              text="Regístrate"
               fontSize={14}
               fontWeight={500}
-              color={colors.white}
+              color={colors.whiteLight}
               extraStyle={styles.closeButtonText}
             />
           </TouchableOpacity>
         </View>
       </View>
       <SentEmail visible={isSentEmail} onClose={() => setIsSentEmail(false)} />
-    </CustomModal>
+    </PageWrapper>
   )
 }
 
 const styles = StyleSheet.create({
   content: {
-    paddingHorizontal: 30,
     paddingVertical: 50,
-    borderWidth: 1,
-    borderColor: colors.main,
-    borderRadius: 20,
-    backgroundColor: colors.mainBackground,
-    gap: 30,
-    justifyContent: 'space-between',
+    gap: 50,
+    flex: 1,
   },
   header: {
     alignItems: 'center',
     gap: 50,
-  },
-  logoContainer: {
-    gap: 30,
-    alignItems: 'center',
   },
   titleContainer: {
     gap: 6,
     alignItems: 'center',
   },
   mascotImage: {
-    width: 109,
-    height: 75,
+    width: 180,
+    height: 140,
   },
   logoImage: {
-    width: 158,
-    height: 23,
+    width: 180,
+    height: 30,
   },
   form: {
     gap: 30,
@@ -208,5 +208,13 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     gap: 20,
+  },
+  registerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    gap: 6,
+    // width: '100%',
   },
 })

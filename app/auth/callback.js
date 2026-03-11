@@ -7,6 +7,9 @@ import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
+// Evita procesar la misma URL dos veces (remounts, Strict Mode, getInitialURL + evento 'url')
+let processedCallbackUrl = null
+
 async function processAuthUrl(url, router) {
   const fragment = url.split('#')[1]
   if (!fragment) {
@@ -43,23 +46,25 @@ export default function AuthCallback() {
   const router = useRouter()
 
   useEffect(() => {
-    const handleCallback = async () => {
-      try {
-        const url = await Linking.getInitialURL()
-        if (url) await processAuthUrl(url, router)
-      } catch (err) {
-        console.error('Auth callback error:', err)
-        router.replace(ROUTES_NAMES.INIT)
-      }
-    }
-
-    const subscription = Linking.addEventListener('url', async ({ url }) => {
+    const handleUrl = async (url) => {
+      if (processedCallbackUrl === url) return
+      processedCallbackUrl = url
       try {
         await processAuthUrl(url, router)
       } catch (err) {
         console.error('Auth callback error:', err)
+        processedCallbackUrl = null
         router.replace(ROUTES_NAMES.INIT)
       }
+    }
+
+    const handleCallback = async () => {
+      const url = await Linking.getInitialURL()
+      if (url) await handleUrl(url)
+    }
+
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      handleUrl(url)
     })
 
     handleCallback()

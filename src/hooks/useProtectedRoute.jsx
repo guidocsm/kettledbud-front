@@ -10,6 +10,7 @@ export const PUBLIC_ROUTES = [
   ROUTES_NAMES.ONBOARDING,
   ROUTES_NAMES.PREVIEW_PLAN,
   ROUTES_NAMES.AUTH,
+  ROUTES_NAMES.AUTH_CALLBACK,
 ]
 
 let hasChecked = false
@@ -27,6 +28,7 @@ export function useProtectedRoute() {
 
     const checkAuth = async () => {
       const initialUrl = await Linking.getInitialURL()
+      // No hacer redirect ni getSession cuando estamos en callback: deja que callback.js procese la URL
       if (initialUrl?.includes(ROUTES_NAMES.AUTH_CALLBACK)) {
         setIsReady(true)
         return

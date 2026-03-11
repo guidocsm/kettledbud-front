@@ -1,0 +1,131 @@
+{
+  "COMMON": {
+    "KETTLEBI": "Kettlebi",
+    "GO": "Go!",
+    "CONTINUE": "Continue",
+    "DAYS_PER_WEEK": "days per week",
+    "GOALS_KEYS": {
+      "FEEL_BETTER": "Feel better",
+      "LOSE_FAT": "Lose fat",
+      "GAIN_MUSCLE": "Gain muscle"
+    },
+    "FORM": {
+      "EMAIL": {
+        "LABEL": "Email",
+        "PLACEHOLDER": "user@gmail.com",
+        "INVALID": "Invalid email"
+      },
+      "REQUIRED_FIELD": "This field is required"
+    },
+    "EXIT": "Exit",
+    "CLOSE": "Close"
+  },
+  "INIT": {
+    "SUBTITLE": "Your gym buddy. Learn, train and progress.",
+    "LOGIN_BUTTON": "I already have an account"
+  },
+  "WELCOME": {
+    "GREETING": "Hi! I'm <bold>Kettlebi</bold>, your new gym buddy.",
+    "DESCRIPTION": "I'll ask you a few quick questions to build your training plan.",
+    "DURATION": "It only takes 2 minutes."
+  },
+  "ONBOARDING": {
+    "EXPERIENCE": {
+      "FOLLOW_UP": {
+        "MESSAGE": "Have you trained for more than 6 months?",
+        "YES": "Yes",
+        "NO": "No"
+      }
+    },
+    "BRIDGE": {
+      "DESCRIPTION": "Almost there! I need a bit more info to create a routine that really fits you. Quick questions, done in a minute!"
+    },
+    "BIRTHDAY": {
+      "DISCLAIMER": "Your age helps me adapt the plan intensity.",
+      "UNDER_AGE_ERROR": "You must be over 16 years old"
+    },
+    "BODY_METRICS": {
+      "HEIGHT": {
+        "TITLE": "Height",
+        "UNIT": "cm"
+      },
+      "WEIGHT": {
+        "TITLE": "Weight",
+        "UNIT": "kg"
+      },
+      "DISCLAIMER": "With this I can calculate your real progress and suggest safe starting weights."
+    },
+    "INJURIES": {
+      "NONE": "None"
+    }
+  },
+  "PREVIEW_PLAN": {
+    "SETTLED_PLAN": "All set! I created your program.",
+    "DESCRIPTION": "Review the summary and when you're ready, save your plan and let's start.",
+    "SAVE_PLAN": "Save my plan",
+    "YOUR_GOAL": "Your goal",
+    "WEEKS": "weeks",
+    "DAYS_WEEKS": "days / week",
+    "MIN_SESSION": "min / session",
+    "WEEKLY_PLAN": {
+      "TITLE": "Your weekly plan",
+      "MUSCULAR_GROUP_AND_EXERCISES": "{{muscularGroup}} | {{exercises}} exercises",
+      "LOCKED_MESSAGE": "You'll discover the rest in your session"
+    },
+    "MUSCULAR_GROUPS": {
+      "MUSCULAR_GROUP_UPPER": "Upper body",
+      "MUSCULAR_GROUP_LOWER": "Lower body",
+      "MUSCULAR_GROUP_FULL_BODY": "Full body",
+      "MUSCULAR_GROUP_PUSH": "Push",
+      "MUSCULAR_GROUP_PULL": "Pull",
+      "MUSCULAR_GROUP_LEGS": "Legs"
+    },
+    "START_AGAIN": "Start again"
+  },
+  "AUTH": {
+    "SIGNUP": {
+      "ONBOARDING": {
+        "TITLE": "One last step",
+        "DESCRIPTION": "Sign up to save your plan",
+        "EMAIL": "Email",
+        "EMAIL_PLACEHOLDER": "user@gmail.com",
+        "CONTINUE": "Continue"
+      }
+    },
+    "GOOGLE": {
+      "TITLE": "Continue with Google",
+      "DESCRIPTION": "Sign up to save your plan"
+    },
+    "OTHER_OPTIONS_LABEL": "Or, if you prefer:"
+  },
+  "TABS": {
+    "HOME": "Home",
+    "PROGRESS": "Progress",
+    "EXPLORE": "Explore",
+    "PROFILE": "Profile"
+  },
+  "HOME": {
+    "TODAY_LABEL": "HOY",
+    "WEEK_TITLE": "Semana {{current}} de {{total}}",
+    "EMPTY_HISTORY_MESSAGE": "Tu historial irá apareciendo aquí a medida que entrenes",
+    "REMAINING_SESSIONS": "Te quedan {{count}} sesiones esta semana",
+    "WEEK_COMPLETED": "¡Semana completada!",
+    "DAY_LABELS": {
+      "0": "Dom",
+      "1": "Lun",
+      "2": "Mar",
+      "3": "Mié",
+      "4": "Jue",
+      "5": "Vie",
+      "6": "Sáb"
+    },
+    "MUSCLE_GROUPS": {
+      "upper": "Tren superior",
+      "lower": "Tren inferior",
+      "push": "Empuje",
+      "pull": "Tirón",
+      "legs": "Piernas",
+      "full_body": "Cuerpo completo"
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
+import { useSignIn } from '@/src/hooks/useSignIn'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
@@ -18,10 +19,18 @@ export default function PreviewPlanScreen() {
   const [previewPlan, setPreviewPlan] = useState(null)
   const [userData, setUserData] = useState(null)
   const [openSignup, setOpenSignup] = useState(false)
-  const [isSentEmail, setIsSentEmail] = useState(false)
+  // const [isSentEmail, setIsSentEmail] = useState(false)
 
   const { t } = useTranslation()
   const router = useRouter()
+
+  const {
+    isSigningWithEmail,
+    isSentEmail,
+    setIsSentEmail,
+    onSignInWithGoogle,
+    onSignInWithEmail,
+  } = useSignIn()
 
   useEffect(() => {
     const fetchPreviewPlan = async () => {
@@ -42,8 +51,7 @@ export default function PreviewPlanScreen() {
   }
 
   const onSentEmail = () => {
-    setIsSentEmail(true)
-    setOpenSignup(false)
+    onSignInWithEmail(userData?.email)
   }
 
   return (

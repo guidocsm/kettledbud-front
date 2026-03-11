@@ -31,7 +31,7 @@ function InitScreen() {
         />
         <Button
           text="Ya tengo cuenta"
-          onPress={() => {}}
+          onPress={() => router.push(ROUTES_NAMES.LOGIN)}
           textColor={colors.main}
           style={styles.button}
           type="outline"

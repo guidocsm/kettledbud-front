@@ -103,5 +103,29 @@
     "PROGRESS": "Progreso",
     "EXPLORE": "Explorar",
     "PROFILE": "Perfil"
+  },
+  "HOME": {
+    "TODAY_LABEL": "HOY",
+    "WEEK_TITLE": "Semana {{current}} de {{total}}",
+    "EMPTY_HISTORY_MESSAGE": "Tu historial irá apareciendo aquí a medida que entrenes",
+    "REMAINING_SESSIONS": "Te quedan {{count}} sesiones esta semana",
+    "WEEK_COMPLETED": "¡Semana completada!",
+    "DAY_LABELS": {
+      "0": "Dom",
+      "1": "Lun",
+      "2": "Mar",
+      "3": "Mié",
+      "4": "Jue",
+      "5": "Vie",
+      "6": "Sáb"
+    },
+    "MUSCLE_GROUPS": {
+      "upper": "Tren superior",
+      "lower": "Tren inferior",
+      "push": "Pecho",
+      "pull": "Espalda",
+      "legs": "Piernas",
+      "full_body": "Cuerpo completo"
+    }
   }
 }
