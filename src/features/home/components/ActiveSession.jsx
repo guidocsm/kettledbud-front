@@ -8,29 +8,14 @@ import { useTranslation } from 'react-i18next'
 export function ActiveSession({ nextSession, onPress }) {
   const { t } = useTranslation()
 
-  const muscleGroupKey = nextSession?.muscleGroup ?? null
-
-  const muscleGroupLabel =
-    muscleGroupKey != null
-      ? t(`HOME.MUSCLE_GROUPS.${muscleGroupKey}`, { defaultValue: '' })
-      : ''
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.circle}
-        activeOpacity={0.9}
-        onPress={onPress}
-      >
+      <TouchableOpacity style={styles.circle} activeOpacity={0.9} onPress={onPress}>
         <View style={styles.lightBorder}>
           <PlayIcon />
         </View>
       </TouchableOpacity>
-      <Image
-        source={require('@/assets/images/kettlebud-logo.png')}
-        style={styles.mascot}
-        resizeMode="contain"
-      />
+      <Image source={require('@/assets/images/kettlebud-logo.png')} style={styles.mascot} resizeMode="contain" />
       <View style={styles.labelsContainer}>
         <CustomText
           text={t('HOME.TODAY_LABEL')}
@@ -39,11 +24,11 @@ export function ActiveSession({ nextSession, onPress }) {
           color={colors.white}
           textAlign="center"
         />
-        {!!muscleGroupLabel && (
+        {!!nextSession?.muscleGroup && (
           <CustomText
-            text={muscleGroupLabel}
+            text={t(`HOME.MUSCLE_GROUPS.${nextSession?.muscleGroup ?? ''}`)}
             fontWeight={600}
-            fontSize={16}
+            fontSize={18}
             color={colors.whiteLight}
             textAlign="center"
           />
@@ -57,8 +42,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 32,
-    marginBottom: 40,
+    marginTop: 30,
+    marginBottom: 20,
     gap: 30,
   },
   circle: {
@@ -68,9 +53,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.main,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.main,
+    shadowColor: colors.mainLight,
     shadowOpacity: 1,
-    shadowRadius: 0.8,
+    shadowRadius: 30,
     shadowOffset: { width: 0, height: 2 },
   },
   lightBorder: {
@@ -87,13 +72,8 @@ const styles = StyleSheet.create({
     right: 0,
     width: 109,
     height: 75,
-    shadowColor: colors.mainLight,
-    shadowOpacity: 30,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 2 },
   },
   labelsContainer: {
-    marginTop: 12,
     alignItems: 'center',
   },
 })

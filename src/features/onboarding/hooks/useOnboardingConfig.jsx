@@ -8,8 +8,8 @@ export function useOnboardingConfig() {
   useEffect(() => {
     async function fetchConfig() {
       try {
-        const data = await apiClient.get('/onboarding-config')
-        setOnboardingConfig(data)
+        const response = await apiClient.get('/onboarding-config')
+        setOnboardingConfig(response.data)
       } catch (error) {
         console.error('Error fetching onboarding config:', error)
       }

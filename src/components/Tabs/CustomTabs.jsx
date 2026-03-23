@@ -1,9 +1,4 @@
-import {
-  ExploreIcon,
-  HomeIcon,
-  ProfileIcon,
-  ProgressIcon,
-} from '@/assets/Icons'
+import { ExploreIcon, HomeIcon, ProfileIcon, ProgressIcon } from '@/assets/Icons'
 import { colors } from '@/src/constants/theme'
 import { Tabs } from 'expo-router'
 import { useTranslation } from 'react-i18next'
@@ -33,45 +28,25 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Tab Icon={HomeIcon} focused={focused} label={t('TABS.HOME')} />
-          ),
+          tabBarIcon: ({ focused }) => <Tab Icon={HomeIcon} focused={focused} label={t('TABS.HOME')} />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Tab
-              Icon={ProgressIcon}
-              focused={focused}
-              label={t('TABS.PROGRESS')}
-            />
-          ),
+          tabBarIcon: ({ focused }) => <Tab Icon={ProgressIcon} focused={focused} label={t('TABS.PROGRESS')} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Tab
-              Icon={ExploreIcon}
-              focused={focused}
-              label={t('TABS.EXPLORE')}
-            />
-          ),
+          tabBarIcon: ({ focused }) => <Tab Icon={ExploreIcon} focused={focused} label={t('TABS.EXPLORE')} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Tab
-              Icon={ProfileIcon}
-              focused={focused}
-              label={t('TABS.PROFILE')}
-            />
-          ),
+          tabBarIcon: ({ focused }) => <Tab Icon={ProfileIcon} focused={focused} label={t('TABS.PROFILE')} />,
         }}
       />
     </Tabs>

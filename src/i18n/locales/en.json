@@ -107,6 +107,7 @@
   "HOME": {
     "TODAY_LABEL": "HOY",
     "WEEK_TITLE": "Semana {{current}} de {{total}}",
+    "PAST_WEEK_TITLE": "Semana {{week}}",
     "EMPTY_HISTORY_MESSAGE": "Tu historial irá apareciendo aquí a medida que entrenes",
     "REMAINING_SESSIONS": "Te quedan {{count}} sesiones esta semana",
     "WEEK_COMPLETED": "¡Semana completada!",

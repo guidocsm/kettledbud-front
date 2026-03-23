@@ -2,13 +2,13 @@ import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import { flushOnboardingData } from '@/src/services/onboarding/flushOnboardingData'
 import { saveUserPlan } from '@/src/services/onboarding/saveUserPlan'
 import { supabase } from '@/src/services/supabase/supabase'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Linking from 'expo-linking'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-// Evita procesar la misma URL dos veces (remounts, Strict Mode, getInitialURL + evento 'url')
-let processedCallbackUrl = null
+let isProcessing = false
 
 async function processAuthUrl(url, router) {
   const fragment = url.split('#')[1]
@@ -21,12 +21,26 @@ async function processAuthUrl(url, router) {
     fragment.split('&').map((pair) => pair.split('=')),
   )
 
+  if (params.error) {
+    router.replace(ROUTES_NAMES.INIT)
+    return
+  }
+
   if (params.access_token && params.refresh_token) {
-    const { error } = await supabase.auth.setSession({
-      access_token: params.access_token,
-      refresh_token: params.refresh_token,
-    })
-    if (error) throw error
+    const {
+      data: { session: existingSession },
+    } = await supabase.auth.getSession()
+
+    if (!existingSession) {
+      const { error } = await supabase.auth.setSession({
+        access_token: params.access_token,
+        refresh_token: params.refresh_token,
+      })
+      if (error) {
+        const isAlreadyUsed = error.message?.includes('Already Used')
+        if (!isAlreadyUsed) throw error
+      }
+    }
   }
 
   const {
@@ -36,6 +50,7 @@ async function processAuthUrl(url, router) {
   if (session) {
     await flushOnboardingData()
     await saveUserPlan()
+    await AsyncStorage.removeItem('previewPlan')
     router.replace(ROUTES_NAMES.HOME)
   } else {
     router.replace(ROUTES_NAMES.PREVIEW_PLAN)
@@ -47,14 +62,15 @@ export default function AuthCallback() {
 
   useEffect(() => {
     const handleUrl = async (url) => {
-      if (processedCallbackUrl === url) return
-      processedCallbackUrl = url
+      if (isProcessing) return
+      isProcessing = true
       try {
         await processAuthUrl(url, router)
       } catch (err) {
         console.error('Auth callback error:', err)
-        processedCallbackUrl = null
         router.replace(ROUTES_NAMES.INIT)
+      } finally {
+        isProcessing = false
       }
     }
 

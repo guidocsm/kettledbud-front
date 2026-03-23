@@ -26,7 +26,7 @@ apiClient.interceptors.request.use(async (config) => {
 
 apiClient.interceptors.response.use(
   async (response) => {
-    return response.data
+    return response
   },
   async (error) => {
     return Promise.reject(error)

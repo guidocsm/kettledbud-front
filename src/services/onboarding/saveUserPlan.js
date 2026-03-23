@@ -12,7 +12,7 @@ export async function saveUserPlan() {
     await AsyncStorage.removeItem('previewPlanId')
     await AsyncStorage.removeItem('previewPlan')
 
-    return response
+    return response.data
   } catch (err) {
     console.error('Error saving plan:', err)
   }

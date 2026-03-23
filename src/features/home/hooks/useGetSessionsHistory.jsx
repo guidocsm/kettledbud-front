@@ -1,14 +1,14 @@
 import apiClient from '@/src/services/apiClient'
 import { useEffect, useState } from 'react'
 
-export function useGetWeeklyStatus() {
-  const [weeklyStatus, setWeeklyStatus] = useState(null)
+export function useGetSessionsHistory() {
+  const [sessionsHistory, setSessionsHistory] = useState(null)
 
   useEffect(() => {
     const fetchWeeklyStatus = async () => {
       try {
-        const response = await apiClient.get('/weekly-status')
-        setWeeklyStatus(response ?? null)
+        const response = await apiClient.get('/sessions-history')
+        setSessionsHistory(response.data)
       } catch (error) {
         console.log('error fetching weekly status', error)
       }
@@ -16,5 +16,5 @@ export function useGetWeeklyStatus() {
     fetchWeeklyStatus()
   }, [])
 
-  return weeklyStatus
+  return sessionsHistory
 }
