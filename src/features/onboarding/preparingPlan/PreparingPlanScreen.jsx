@@ -279,7 +279,8 @@ export default function PreparingPlan({
         injuries: onboardingState?.injuries,
       }
       try {
-        const data = await apiClient.post('/preview-plan', payload)
+        const response = await apiClient.post('/preview-plan', payload)
+        const data = response.data
 
         if (!mounted) return
 
