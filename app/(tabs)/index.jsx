@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
 
@@ -12,6 +13,7 @@ import { useVisibleWeek } from '@/src/features/home/hooks/useVisibleWeek'
 
 export default function Home() {
   const { t } = useTranslation()
+  const router = useRouter()
 
   const sessionsHistory = useGetSessionsHistory()
   const currentWeekNumber = sessionsHistory?.weekNumber ?? 0
@@ -31,7 +33,10 @@ export default function Home() {
     : t('HOME.PAST_WEEK_TITLE', { week: displayWeek })
 
   const handleActiveSessionPress = () => {
-    console.log('Navigate to workout session', sessionsHistory?.nextSession)
+    const sessionId = sessionsHistory?.nextSession?.sessionId
+    if (sessionId) {
+      router.push({ pathname: '/preworkout', params: { sessionId } })
+    }
   }
 
   return (

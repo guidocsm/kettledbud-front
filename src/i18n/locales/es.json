@@ -104,6 +104,16 @@
     "EXPLORE": "Explorar",
     "PROFILE": "Perfil"
   },
+  "CONSTANTS": {
+    "MINUTES": "minutos"
+  },
+  "PREWORKOUT": {
+    "REST_BETWEEN_SETS": "Descanso entre series",
+    "EXERCISES": "Ejercicios",
+    "START_ROUTINE": "Comenzar rutina",
+    "CONTINUE_ROUTINE": "Continuar rutina",
+    "SETS_INFO": "{{sets}} series"
+  },
   "HOME": {
     "TODAY_LABEL": "HOY",
     "WEEK_TITLE": "Semana {{current}} de {{total}}",
