@@ -536,3 +536,17 @@ export function PlayIcon({ width = 36, height = 36, color = '#1A1A1A' }) {
     </Svg>
   )
 }
+
+export function CheckIcon({ width = 18, height = 18, color = '#1A1A1A' }) {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 14 14" fill="none">
+      <Path
+        d="M2.91675 7.58333L5.25008 9.91667L11.0834 4.08333"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}

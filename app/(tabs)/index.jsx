@@ -10,6 +10,7 @@ import SessionPath from '@/src/features/home/components/SessionPath'
 import WeekSummaryPill from '@/src/features/home/components/WeekSummaryPill'
 import { useGetSessionsHistory } from '@/src/features/home/hooks/useGetSessionsHistory'
 import { useVisibleWeek } from '@/src/features/home/hooks/useVisibleWeek'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 export default function Home() {
   const { t } = useTranslation()
@@ -34,8 +35,9 @@ export default function Home() {
 
   const handleActiveSessionPress = () => {
     const sessionId = sessionsHistory?.nextSession?.sessionId
+
     if (sessionId) {
-      router.push({ pathname: '/preworkout', params: { sessionId } })
+      router.push({ pathname: ROUTES_NAMES.PREWORKOUT, params: { sessionId } })
     }
   }
 

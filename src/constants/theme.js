@@ -2,6 +2,7 @@ export const colors = {
   border: '#DADADA',
   dark: '#1A1A1A',
   darkLight: '#000000B3',
+  grayDark: '#252525',
   main: '#F5A623',
   mainLight: '#F5A62333',
   mainBackground: '#18181B',

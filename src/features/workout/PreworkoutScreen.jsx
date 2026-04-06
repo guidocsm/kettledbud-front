@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
@@ -8,27 +8,32 @@ import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
+import { postWorkoutStart } from '@/src/services/workout/workoutStart'
 
 import ExerciseCard from './components/ExerciseCard'
 import ProgressBar from './components/ProgressBar'
 import RestStepper from './components/RestStepper'
 import { useGetPreworkout } from './hooks/useGetPreworkout'
+import { WORKOUT_STATUS } from './utils/constants'
+import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 export default function PreworkoutScreen() {
+  const [restTime, setRestTime] = useState(null)
+  const [sessionExercises, setSessionExercises] = useState(null)
+  const [starting, setStarting] = useState(false)
+
   const { sessionId } = useLocalSearchParams()
   const { t } = useTranslation()
   const router = useRouter()
 
-  const { preworkout, loading } = useGetPreworkout(sessionId)
-  const [restTime, setRestTime] = useState(null)
+  const { preworkout, loading, updateStatus } = useGetPreworkout(sessionId)
 
   const effectiveRestTime = restTime ?? preworkout?.restTime ?? 90
-
-  const isInProgress = preworkout?.status === 'in_progress'
+  const isInProgress = preworkout?.status === WORKOUT_STATUS.IN_PROGRESS
 
   const completedCount = useMemo(() => {
     if (!preworkout?.exercises) return 0
-    return preworkout.exercises.filter((e) => e.status === 'completed').length
+    return preworkout.exercises.filter((e) => e.status === WORKOUT_STATUS.COMPLETED).length
   }, [preworkout?.exercises])
 
   const totalExercises = preworkout?.exercises?.length ?? 0
@@ -37,6 +42,56 @@ export default function PreworkoutScreen() {
   const muscleGroupLabel = preworkout?.muscleGroup
     ? t(`HOME.MUSCLE_GROUPS.${preworkout.muscleGroup}`)
     : ''
+
+  const startWorkout = useCallback(async () => {
+    try {
+      setStarting(true)
+      const data = await postWorkoutStart(sessionId, effectiveRestTime)
+      setSessionExercises(data.sessionExercises)
+      updateStatus(WORKOUT_STATUS.IN_PROGRESS)
+      return data
+    } catch (err) {
+      console.log('Error starting workout:', err)
+      return null
+    } finally {
+      setStarting(false)
+    }
+  }, [sessionId, effectiveRestTime, updateStatus])
+
+  const navigateToExercise = useCallback((exerciseId) => {
+    router.push({
+      pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
+      params: { sessionId, exerciseId },
+    })
+  }, [router, sessionId])
+
+  const handleStartPress = useCallback(async () => {
+    if (isInProgress) {
+      const nextExercise = preworkout.exercises.find(
+        (e) => e.status !== WORKOUT_STATUS.COMPLETED,
+      )
+      if (nextExercise) navigateToExercise(nextExercise.exerciseId)
+      return
+    }
+
+    const data = await startWorkout()
+    if (data) {
+      const nextExercise = preworkout.exercises.find(
+        (e) => e.status !== WORKOUT_STATUS.COMPLETED,
+      )
+      if (nextExercise) navigateToExercise(nextExercise.exerciseId)
+    }
+  }, [isInProgress, preworkout, startWorkout, navigateToExercise])
+
+  const handleExercisePress = useCallback(async (exerciseId) => {
+    if (isInProgress) {
+      navigateToExercise(exerciseId)
+      return
+    }
+
+    const data = await startWorkout()
+    if (data) navigateToExercise(exerciseId)
+  }, [isInProgress, startWorkout, navigateToExercise])
 
   if (loading || !preworkout) return null
 
@@ -104,6 +159,7 @@ export default function PreworkoutScreen() {
                 image={exercise.image}
                 sets={exercise.sets}
                 status={exercise.status}
+                onPress={() => handleExercisePress(exercise.exerciseId)}
               />
             ))}
           </View>
@@ -114,8 +170,8 @@ export default function PreworkoutScreen() {
               ? t('PREWORKOUT.CONTINUE_ROUTINE')
               : t('PREWORKOUT.START_ROUTINE')
           }
-          type={BUTTON_TYPES.MAIN}
-          onPress={() => {}}
+          type={starting ? BUTTON_TYPES.DISABLED : BUTTON_TYPES.MAIN}
+          onPress={handleStartPress}
         />
       </PageWrapper>
     </View>

@@ -26,5 +26,9 @@ export function useGetPreworkout(sessionId) {
     }
   }, [sessionId])
 
-  return { preworkout, loading, error }
+  const updateStatus = (newStatus) => {
+    setPreworkout((prev) => prev ? { ...prev, status: newStatus } : prev)
+  }
+
+  return { preworkout, loading, error, updateStatus }
 }

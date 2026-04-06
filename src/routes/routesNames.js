@@ -18,4 +18,6 @@ export const ROUTES_NAMES = {
   PREPARING_PLAN: '/onboarding/preparingPlan',
   PREVIEW_PLAN: '/previewPlan',
   SUMMARY: '/onboarding/summary',
+  PREWORKOUT: '/preworkout',
+  EXERCISE_ACTIVE: '/exerciseActive',
 }

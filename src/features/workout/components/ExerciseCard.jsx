@@ -1,24 +1,25 @@
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
 
-import { DumbbellIcon, PlayIcon } from '@/assets/Icons'
+import { CheckIcon, DumbbellIcon, PlayIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
+import { WORKOUT_STATUS } from '../utils/constants'
 
-function CheckIcon({ width = 14, height = 14, color = '#FFFFFF' }) {
-  return (
-    <Svg width={width} height={height} viewBox="0 0 14 14" fill="none">
-      <Path
-        d="M2.91675 7.58333L5.25008 9.91667L11.0834 4.08333"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  )
-}
+// function CheckIcon({ width = 14, height = 14, color = '#FFFFFF' }) {
+//   return (
+//     <Svg width={width} height={height} viewBox="0 0 14 14" fill="none">
+//       <Path
+//         d="M2.91675 7.58333L5.25008 9.91667L11.0834 4.08333"
+//         stroke={color}
+//         strokeWidth="2"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       />
+//     </Svg>
+//   )
+// }
 
 /**
  * @param {object} props
@@ -26,22 +27,23 @@ function CheckIcon({ width = 14, height = 14, color = '#FFFFFF' }) {
  * @param {string|null} props.image - Exercise image URL
  * @param {number} props.sets - Number of sets
  * @param {'pending'|'in_progress'|'completed'} props.status - Exercise status
+ * @param {() => void} [props.onPress] - Callback when card is tapped
  */
-export default function ExerciseCard({ name, image, sets, status = 'pending' }) {
+export default function ExerciseCard({ name, image, sets, status = WORKOUT_STATUS.PENDING, onPress }) {
   const { t } = useTranslation()
 
   const renderStatusIndicator = () => {
-    if (status === 'completed') {
+    if (status === WORKOUT_STATUS.COMPLETED) {
       return (
         <View style={styles.checkCircle}>
-          <CheckIcon />
+          <CheckIcon width={24} height={24} />
         </View>
       )
     }
-    if (status === 'in_progress') {
+    if (status === WORKOUT_STATUS.IN_PROGRESS) {
       return (
         <View style={styles.playWrapper}>
-          <PlayIcon width={18} height={18} color={colors.main} />
+          <PlayIcon width={18} height={18} />
         </View>
       )
     }
@@ -49,15 +51,13 @@ export default function ExerciseCard({ name, image, sets, status = 'pending' }) 
   }
 
   return (
-    <View style={[styles.card, status === 'in_progress' && styles.activeCard]}>
+    <TouchableOpacity
+      style={[styles.card, status === WORKOUT_STATUS.IN_PROGRESS && styles.activeCard]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
       <View style={styles.imageContainer}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.image} />
-        ) : (
-          <View style={styles.placeholder}>
-            <DumbbellIcon width={20} height={20} color={colors.whiteLight} />
-          </View>
-        )}
+        <Image source={{ uri: image }} style={styles.image} />
       </View>
       <View style={styles.info}>
         <CustomText
@@ -74,7 +74,7 @@ export default function ExerciseCard({ name, image, sets, status = 'pending' }) 
         />
       </View>
       {renderStatusIndicator()}
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -84,13 +84,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#252525',
     borderRadius: 20,
-    padding: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
     gap: 12,
+    height: 85,
     borderWidth: 1.5,
     borderColor: 'transparent',
   },
   activeCard: {
     borderColor: colors.main,
+    backgroundColor: colors.mainLight,
   },
   imageContainer: {
     width: 48,
@@ -123,8 +126,9 @@ const styles = StyleSheet.create({
     borderColor: colors.gray,
   },
   playWrapper: {
-    width: 28,
-    height: 28,
+    backgroundColor: colors.main,
+    width: 30,
+    height: 30,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',

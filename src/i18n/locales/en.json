@@ -107,6 +107,18 @@
   "CONSTANTS": {
     "MINUTES": "minutes"
   },
+  "EXERCISE_ACTIVE": {
+    "BACK_TO_HUB": "Back to hub",
+    "SERIES": "Series",
+    "SET": "SET",
+    "PREVIOUS": "PREVIOUS",
+    "KG": "KG",
+    "REPS": "REPS",
+    "KG_PLACEHOLDER": "kg",
+    "REPS_PLACEHOLDER": "reps",
+    "COMPLETE_EXERCISE": "Complete exercise",
+    "FILL_ALL_DATA": "Fill in all your data before continuing"
+  },
   "PREWORKOUT": {
     "REST_BETWEEN_SETS": "Rest between sets",
     "EXERCISES": "Exercises",
