@@ -36,7 +36,9 @@ export default function PreworkoutScreen() {
     }
   }, [preworkout])
 
-  const isInProgress = workoutStore.status === WORKOUT_STATUS.IN_PROGRESS
+  const hasStartedWorkout = workoutStore.exercises.some(
+    (e) => e.status === WORKOUT_STATUS.IN_PROGRESS || e.status === WORKOUT_STATUS.COMPLETED,
+  )
   const completedExerciseCount = workoutStore.exercises.filter(
     (e) => e.status === WORKOUT_STATUS.COMPLETED,
   ).length
@@ -75,7 +77,7 @@ export default function PreworkoutScreen() {
       return
     }
 
-    if (isInProgress) {
+    if (hasStartedWorkout) {
       const nextExercise = workoutStore.exercises.find(
         (e) => e.status !== WORKOUT_STATUS.COMPLETED,
       )
@@ -90,17 +92,17 @@ export default function PreworkoutScreen() {
       )
       if (nextExercise) navigateToExercise(nextExercise.exerciseId)
     }
-  }, [isWorkoutCompleted, isInProgress, workoutStore.exercises, startWorkout, navigateToExercise, router])
+  }, [isWorkoutCompleted, hasStartedWorkout, workoutStore.exercises, startWorkout, navigateToExercise, router])
 
   const handleExercisePress = useCallback(async (exerciseId) => {
-    if (isInProgress) {
+    if (hasStartedWorkout) {
       navigateToExercise(exerciseId)
       return
     }
 
     const data = await startWorkout()
     if (data) navigateToExercise(exerciseId)
-  }, [isInProgress, startWorkout, navigateToExercise])
+  }, [hasStartedWorkout, startWorkout, navigateToExercise])
 
   if (loading || !preworkout) return null
 
@@ -177,7 +179,7 @@ export default function PreworkoutScreen() {
           text={
             isWorkoutCompleted
               ? t('COMMON.CLOSE')
-              : isInProgress
+              : hasStartedWorkout
               ? t('PREWORKOUT.CONTINUE_ROUTINE')
               : t('PREWORKOUT.START_ROUTINE')
           }

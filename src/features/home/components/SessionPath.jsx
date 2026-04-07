@@ -50,6 +50,13 @@ export function SessionPath({ sessionsHistory, onActiveSessionPress, onWeekLayou
 
   const currentWeekNumber = sessionsHistory?.weeks?.[sessionsHistory.weeks.length - 1]?.weekNumber
   const hasHistory = sections.some((s) => s.days.length > 0)
+  const isWorkoutCompleted = (
+    !sessionsHistory?.nextSession?.sessionId
+    || (
+      sessionsHistory?.totalSessions > 0
+      && sessionsHistory?.completedSessions >= sessionsHistory?.totalSessions
+    )
+  )
 
   if (!sections.length) return null
 
@@ -58,6 +65,7 @@ export function SessionPath({ sessionsHistory, onActiveSessionPress, onWeekLayou
       <ActiveSession
         nextSession={sessionsHistory.nextSession}
         onPress={onActiveSessionPress}
+        isWorkoutCompleted={isWorkoutCompleted}
       />
       {!hasHistory ? (
         <EmptyHistory />

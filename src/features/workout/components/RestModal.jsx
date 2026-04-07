@@ -137,7 +137,7 @@ export default function RestModal() {
               resizeMode="contain"
             />
             <TypewriterBubble arrowDirection="left" width={240}>
-              <CustomText fontWeight={500} fontSize={14} color={colors.dark}>
+              <CustomText fontWeight={500} fontSize={16} color={colors.dark}>
                 {message}
               </CustomText>
             </TypewriterBubble>

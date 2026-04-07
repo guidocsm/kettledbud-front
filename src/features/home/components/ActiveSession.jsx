@@ -1,18 +1,27 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import { PlayIcon } from '@/assets/Icons'
+import { CheckIcon, PlayIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 import { useTranslation } from 'react-i18next'
 
-export function ActiveSession({ nextSession, onPress }) {
+export function ActiveSession({ nextSession, onPress, isWorkoutCompleted = false }) {
+  console.log('isWorkoutCompleted', isWorkoutCompleted);
   const { t } = useTranslation()
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.circle} activeOpacity={0.9} onPress={onPress}>
+      <TouchableOpacity
+        style={[styles.circle, isWorkoutCompleted && styles.completedCircle]}
+        activeOpacity={0.9}
+        onPress={onPress}
+      >
         <View style={styles.lightBorder}>
-          <PlayIcon />
+          {isWorkoutCompleted ? (
+            <CheckIcon width={20} height={20} color={colors.mainBackground} />
+          ) : (
+            <PlayIcon />
+          )}
         </View>
       </TouchableOpacity>
       <Image source={require('@/assets/images/kettlebud-logo.png')} style={styles.mascot} resizeMode="contain" />
@@ -57,6 +66,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 30,
     shadowOffset: { width: 0, height: 2 },
+  },
+  completedCircle: {
+    backgroundColor: colors.success,
+    shadowColor: colors.success,
   },
   lightBorder: {
     width: 67,

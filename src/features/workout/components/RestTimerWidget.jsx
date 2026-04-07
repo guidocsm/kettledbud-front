@@ -1,4 +1,5 @@
 import { useRouter, useSegments } from 'expo-router'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -35,16 +36,23 @@ export default function RestTimerWidget() {
     outputRange: [0.35, 0],
   })
 
-  const shouldShow = (restTimerStore.isActive || restTimerStore.isFinished) && !restTimerStore.isVisible
-  if (!shouldShow) return null
-
   const isTabScreen = segments[0] === '(tabs)'
+  const isExerciseActiveScreen = segments[segments.length - 1] === 'exerciseActive'
   const bottomOffset = isTabScreen ? TAB_BAR_HEIGHT + 30 : (insets.bottom || 16)
 
   const exercise = workoutStore.exercises.find(
     (e) => e.exerciseId === workoutStore.currentExerciseId,
   )
   const isExerciseCompleted = exercise?.status === WORKOUT_STATUS.COMPLETED
+
+  useEffect(() => {
+    if (restTimerStore.isFinished && isExerciseActiveScreen) {
+      restTimerStore.dismissFinished()
+    }
+  }, [restTimerStore.isFinished, isExerciseActiveScreen])
+
+  const shouldShow = (restTimerStore.isActive || restTimerStore.isFinished) && !restTimerStore.isVisible
+  if (!shouldShow) return null
 
   const handleFinishedPress = () => {
     restTimerStore.dismissFinished()
@@ -175,8 +183,10 @@ const styles = StyleSheet.create({
   },
   rightIcon: {
     width: 28,
-    alignItems: 'flex-end',
+    height: 36,
+    alignItems: 'center',
     justifyContent: 'center',
+    transform: [{ translateY: -1 }],
   },
   mascot: {
     width: 67,

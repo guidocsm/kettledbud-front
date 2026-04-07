@@ -61,6 +61,20 @@ export default function ExerciseActiveScreen() {
     () => workoutStore.exercises.findIndex((e) => e.exerciseId === parseInt(exerciseId)),
     [workoutStore.exercises, exerciseId],
   )
+  const currentExerciseStatus = useMemo(
+    () => workoutStore.exercises.find((e) => e.exerciseId === parseInt(exerciseId))?.status,
+    [workoutStore.exercises, exerciseId],
+  )
+  const hasOtherExerciseInProgress = useMemo(
+    () => workoutStore.exercises.some(
+      (e) => e.exerciseId !== parseInt(exerciseId) && e.status === WORKOUT_STATUS.IN_PROGRESS,
+    ),
+    [workoutStore.exercises, exerciseId],
+  )
+  const isSetEntryLocked = (
+    currentExerciseStatus === WORKOUT_STATUS.PENDING
+    && hasOtherExerciseInProgress
+  )
   const isLastExercise = currentExerciseIndex === workoutStore.exercises.length - 1
 
   const handleSetChange = useCallback((index, field, value) => {
@@ -70,6 +84,8 @@ export default function ExerciseActiveScreen() {
   }, [])
 
   const handleSetComplete = useCallback(async (index, weight, reps) => {
+    if (isSetEntryLocked) return
+
     const weightNum = parseFloat(weight)
     const repsNum = parseInt(reps, 10)
 
@@ -91,13 +107,15 @@ export default function ExerciseActiveScreen() {
       if (result.exerciseCompleted || nextSets.every((s) => s.isCompleted)) {
         workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.COMPLETED)
         setExerciseIsCompleted(true)
+      } else {
+        workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.IN_PROGRESS)
       }
     } catch (err) {
       console.log('Error saving set:', err)
     } finally {
       setSavingSetIndex(-1)
     }
-  }, [localSets])
+  }, [localSets, isSetEntryLocked])
 
   const togglePlayback = useCallback(async () => {
     if (!videoRef.current) return
@@ -206,20 +224,11 @@ export default function ExerciseActiveScreen() {
         <View style={styles.setsTableContainer}>
           <SetsTable
             sets={localSets}
-            activeSetIndex={activeSetIndex}
+            activeSetIndex={isSetEntryLocked ? -1 : activeSetIndex}
             savingSetIndex={savingSetIndex}
             onSetComplete={handleSetComplete}
             onSetChange={handleSetChange}
           />
-          {!exerciseIsCompleted && (
-            <CustomText
-              text={t('EXERCISE_ACTIVE.FILL_ALL_DATA')}
-              fontWeight={500}
-              fontSize={12}
-              color={colors.whiteLight}
-              textAlign="center"
-            />
-          )}
         </View>
         {exerciseIsCompleted && (
           <Button

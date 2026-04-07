@@ -7,29 +7,13 @@ import CustomText from '@/src/components/CustomText'
 import { colors } from '@/src/constants/theme'
 import { WORKOUT_STATUS } from '../utils/constants'
 
-// function CheckIcon({ width = 14, height = 14, color = '#FFFFFF' }) {
-//   return (
-//     <Svg width={width} height={height} viewBox="0 0 14 14" fill="none">
-//       <Path
-//         d="M2.91675 7.58333L5.25008 9.91667L11.0834 4.08333"
-//         stroke={color}
-//         strokeWidth="2"
-//         strokeLinecap="round"
-//         strokeLinejoin="round"
-//       />
-//     </Svg>
-//   )
-// }
-
-/**
- * @param {object} props
- * @param {string} props.name - Exercise name
- * @param {string|null} props.image - Exercise image URL
- * @param {number} props.sets - Number of sets
- * @param {'pending'|'in_progress'|'completed'} props.status - Exercise status
- * @param {() => void} [props.onPress] - Callback when card is tapped
- */
-export default function ExerciseCard({ name, image, sets, status = WORKOUT_STATUS.PENDING, onPress }) {
+export default function ExerciseCard({
+  name,
+  image,
+  sets,
+  status = WORKOUT_STATUS.PENDING,
+  onPress,
+}) {
   const { t } = useTranslation()
 
   const renderStatusIndicator = () => {
@@ -52,7 +36,10 @@ export default function ExerciseCard({ name, image, sets, status = WORKOUT_STATU
 
   return (
     <TouchableOpacity
-      style={[styles.card, status === WORKOUT_STATUS.IN_PROGRESS && styles.activeCard]}
+      style={[
+        styles.card,
+        status === WORKOUT_STATUS.IN_PROGRESS && styles.activeCard,
+      ]}
       onPress={onPress}
       activeOpacity={0.7}
     >
