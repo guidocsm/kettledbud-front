@@ -1,20 +1,24 @@
+import { Video, ResizeMode } from 'expo-av'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import { BackIcon, DumbbellIcon } from '@/assets/Icons'
+import { BackIcon, DumbbellIcon, PauseIcon, PlayIcon } from '@/assets/Icons'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import { patchWorkoutSet } from '@/src/services/workout/patchWorkoutSet'
+import useRestTimerStore from '@/src/stores/useRestTimerStore'
+import useWorkoutStore from '@/src/stores/useWorkoutStore'
 
 import ExerciseTips from './components/ExerciseTips'
 import ProgressBar from './components/ProgressBar'
 import SetsTable from './components/SetsTable'
 import { useGetExerciseDetail } from './hooks/useGetExerciseDetail'
+import { WORKOUT_STATUS } from './utils/constants'
 
 export default function ExerciseActiveScreen() {
   const { sessionId, exerciseId } = useLocalSearchParams()
@@ -24,8 +28,18 @@ export default function ExerciseActiveScreen() {
   const { exerciseDetail, loading } = useGetExerciseDetail(sessionId, exerciseId)
   const [localSets, setLocalSets] = useState([])
   const [savingSetIndex, setSavingSetIndex] = useState(-1)
-  const [completedProgressCount, setCompletedProgressCount] = useState(0)
   const [exerciseIsCompleted, setExerciseIsCompleted] = useState(false)
+  const videoRef = useRef(null)
+  const [isPlaying, setIsPlaying] = useState(true)
+
+  const workoutStore = useWorkoutStore()
+  const restTimerStore = useRestTimerStore()
+
+  useEffect(() => {
+    if (exerciseId) {
+      workoutStore.setCurrentExerciseId(parseInt(exerciseId))
+    }
+  }, [exerciseId])
 
   useEffect(() => {
     if (exerciseDetail?.sets) {
@@ -39,21 +53,15 @@ export default function ExerciseActiveScreen() {
     }
   }, [exerciseDetail])
 
-  useEffect(() => {
-    if (exerciseDetail?.workoutProgress) {
-      setCompletedProgressCount(exerciseDetail.workoutProgress.completed)
-    }
-  }, [exerciseDetail?.workoutProgress])
-
   const activeSetIndex = useMemo(
     () => localSets.findIndex((s) => !s.isCompleted),
     [localSets],
   )
-
-  const workoutProgress = exerciseDetail?.workoutProgress
-  const overallProgress = workoutProgress
-    ? completedProgressCount / workoutProgress.total
-    : 0
+  const currentExerciseIndex = useMemo(
+    () => workoutStore.exercises.findIndex((e) => e.exerciseId === parseInt(exerciseId)),
+    [workoutStore.exercises, exerciseId],
+  )
+  const isLastExercise = currentExerciseIndex === workoutStore.exercises.length - 1
 
   const handleSetChange = useCallback((index, field, value) => {
     setLocalSets((prev) =>
@@ -73,14 +81,15 @@ export default function ExerciseActiveScreen() {
     try {
       setSavingSetIndex(index)
       const result = await patchWorkoutSet(set.exerciseSetId, weightNum, repsNum)
-      setLocalSets((prev) =>
-        prev.map((s, i) =>
+      const nextSets = localSets.map((s, i) =>
           i === index ? { ...s, isCompleted: true, weight, reps } : s,
-        ),
       )
-      setCompletedProgressCount((prev) => prev + 1)
+      setLocalSets(nextSets)
+      workoutStore.incrementCompletedSets()
+      restTimerStore.startTimer(workoutStore.restTime ?? 90)
 
-      if (result.exerciseCompleted) {
+      if (result.exerciseCompleted || nextSets.every((s) => s.isCompleted)) {
+        workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.COMPLETED)
         setExerciseIsCompleted(true)
       }
     } catch (err) {
@@ -90,12 +99,33 @@ export default function ExerciseActiveScreen() {
     }
   }, [localSets])
 
+  const togglePlayback = useCallback(async () => {
+    if (!videoRef.current) return
+    if (isPlaying) {
+      await videoRef.current.pauseAsync()
+    } else {
+      await videoRef.current.playAsync()
+    }
+    setIsPlaying((prev) => !prev)
+  }, [isPlaying])
+
   const handleCompleteExercise = useCallback(() => {
+    if (isLastExercise) {
+      router.push({
+        pathname: ROUTES_NAMES.PREWORKOUT,
+        params: { sessionId },
+      })
+      return
+    }
+
+    const nextExercise = workoutStore.exercises[currentExerciseIndex + 1]
+    if (!nextExercise) return
+
     router.push({
-      pathname: ROUTES_NAMES.PREWORKOUT,
-      params: { sessionId },
+      pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
+      params: { sessionId, exerciseId: nextExercise.exerciseId },
     })
-  }, [router, sessionId, exerciseId])
+  }, [router, sessionId, isLastExercise, workoutStore.exercises, currentExerciseIndex])
 
   if (loading || !exerciseDetail) return null
 
@@ -116,7 +146,7 @@ export default function ExerciseActiveScreen() {
             color={colors.white}
           />
         </View>
-        <ProgressBar progress={overallProgress} />
+        <ProgressBar progress={workoutStore.workoutProgress()} />
         <View style={styles.exerciseNameRow}>
           <CustomText
             text={exerciseDetail.name}
@@ -134,7 +164,34 @@ export default function ExerciseActiveScreen() {
             />
           ) : null}
         </View>
-        {exerciseDetail.image ? (
+        {exerciseDetail.videoUrl ? (
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={togglePlayback}
+            style={styles.videoWrapper}
+          >
+            <Video
+              ref={videoRef}
+              source={{ uri: exerciseDetail.videoUrl }}
+              style={styles.exerciseVideo}
+              resizeMode={ResizeMode.COVER}
+              shouldPlay
+              isLooping
+              isMuted
+            />
+            <TouchableOpacity
+              onPress={togglePlayback}
+              style={styles.playPauseButton}
+              activeOpacity={0.7}
+            >
+              {isPlaying ? (
+                <PauseIcon width={20} height={20} color={colors.white} />
+              ) : (
+                <PlayIcon width={20} height={20} color={colors.white} />
+              )}
+            </TouchableOpacity>
+          </TouchableOpacity>
+        ) : exerciseDetail.image ? (
           <Image
             source={{ uri: exerciseDetail.image }}
             style={styles.exerciseImage}
@@ -164,11 +221,13 @@ export default function ExerciseActiveScreen() {
             />
           )}
         </View>
-        <Button
-          text={t('EXERCISE_ACTIVE.COMPLETE_EXERCISE')}
-          type={exerciseIsCompleted ? BUTTON_TYPES.MAIN : BUTTON_TYPES.DISABLED}
-          onPress={handleCompleteExercise}
-        />
+        {exerciseIsCompleted && (
+          <Button
+            text={t(isLastExercise ? 'COMMON.CLOSE' : 'EXERCISE_ACTIVE.NEXT_EXERCISE')}
+            type={BUTTON_TYPES.MAIN}
+            onPress={handleCompleteExercise}
+          />
+        )}
       </PageWrapper>
     </View>
   )
@@ -205,6 +264,28 @@ const styles = StyleSheet.create({
   exerciseName: {
     flex: 1,
     marginRight: 12,
+  },
+  videoWrapper: {
+    width: '100%',
+    height: 200,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: '#252525',
+  },
+  exerciseVideo: {
+    width: '100%',
+    height: '100%',
+  },
+  playPauseButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   exerciseImage: {
     width: '100%',

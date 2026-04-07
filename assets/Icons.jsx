@@ -307,7 +307,9 @@ export function IOSWatchIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
   )
 }
 
-export function ChevronIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
+
+export function ChevronIcon({ width = 20, height = 20, color = '#1A1A1A', direction = 'bottom' }) {
+  const CHEVRON_ROTATION = { bottom: 0, left: 90, top: 180, right: 270 }
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -315,6 +317,7 @@ export function ChevronIcon({ width = 20, height = 20, color = '#1A1A1A' }) {
       height={height}
       viewBox="0 0 20 20"
       fill="none"
+      style={{ transform: [{ rotate: `${CHEVRON_ROTATION[direction]}deg` }] }}
     >
       <Path
         d="M18 9L12 15L6 9"
@@ -532,6 +535,26 @@ export function PlayIcon({ width = 36, height = 36, color = '#1A1A1A' }) {
         stroke-width="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+export function PauseIcon({ width = 36, height = 36, color = '#1A1A1A' }) {
+  return (
+    <Svg
+      width={width}
+      height={height}
+      viewBox="0 0 36 36"
+      fill="none"
+    >
+      <Path
+        d="M12 8C12 7.44772 12.4477 7 13 7H14.5C15.0523 7 15.5 7.44772 15.5 8V28C15.5 28.5523 15.0523 29 14.5 29H13C12.4477 29 12 28.5523 12 28V8Z"
+        fill={color}
+      />
+      <Path
+        d="M20.5 8C20.5 7.44772 20.9477 7 21.5 7H23C23.5523 7 24 7.44772 24 8V28C24 28.5523 23.5523 29 23 29H21.5C20.9477 29 20.5 28.5523 20.5 28V8Z"
+        fill={color}
       />
     </Svg>
   )

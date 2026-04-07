@@ -117,7 +117,23 @@
     "KG_PLACEHOLDER": "kg",
     "REPS_PLACEHOLDER": "reps",
     "COMPLETE_EXERCISE": "Completar ejercicio",
+    "NEXT_EXERCISE": "Siguiente ejercicio",
     "FILL_ALL_DATA": "Anota todos tus datos antes de continuar"
+  },
+  "REST": {
+    "TITLE": "DESCANSO",
+    "SKIP": "Saltar descanso",
+    "READY_NEXT_EXERCISE": "¡Estás listo para el siguiente ejercicio!",
+    "READY_NEXT_SET": "¡Estás listo para la siguiente serie!",
+    "MINIMIZE": "Minimizar",
+    "RESTING": "Descansando...",
+    "MESSAGES": [
+      "Descansa bien, en la siguiente puedes más",
+      "Buen trabajo, respira profundo",
+      "Aprovecha para hidratarte",
+      "Sacude los músculos, ya casi",
+      "Así se hace, vamos a por la siguiente"
+    ]
   },
   "PREWORKOUT": {
     "REST_BETWEEN_SETS": "Descanso entre series",

@@ -3,6 +3,8 @@ import { Stack } from 'expo-router'
 import { StyleSheet } from 'react-native'
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import RestModal from '@/src/features/workout/components/RestModal'
+import RestTimerWidget from '@/src/features/workout/components/RestTimerWidget'
 import { useAppFonts } from '@/src/hooks/useAppFonts'
 
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
@@ -43,6 +45,8 @@ export default function IndexLayout() {
         <Stack.Screen name="auth/callback" />
         <Stack.Screen name="(tabs)" />
       </Stack>
+      <RestTimerWidget />
+      <RestModal />
     </SafeAreaProvider>
   )
 }

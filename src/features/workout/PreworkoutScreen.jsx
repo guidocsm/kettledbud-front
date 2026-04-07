@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
@@ -9,6 +9,7 @@ import CustomText from '@/src/components/CustomText'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
 import { postWorkoutStart } from '@/src/services/workout/workoutStart'
+import useWorkoutStore from '@/src/stores/useWorkoutStore'
 
 import ExerciseCard from './components/ExerciseCard'
 import ProgressBar from './components/ProgressBar'
@@ -18,7 +19,6 @@ import { WORKOUT_STATUS } from './utils/constants'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 
 export default function PreworkoutScreen() {
-  const [restTime, setRestTime] = useState(null)
   const [sessionExercises, setSessionExercises] = useState(null)
   const [starting, setStarting] = useState(false)
 
@@ -26,18 +26,22 @@ export default function PreworkoutScreen() {
   const { t } = useTranslation()
   const router = useRouter()
 
-  const { preworkout, loading, updateStatus } = useGetPreworkout(sessionId)
+  const { preworkout, loading } = useGetPreworkout(sessionId)
 
-  const effectiveRestTime = restTime ?? preworkout?.restTime ?? 90
-  const isInProgress = preworkout?.status === WORKOUT_STATUS.IN_PROGRESS
+  const workoutStore = useWorkoutStore()
 
-  const completedCount = useMemo(() => {
-    if (!preworkout?.exercises) return 0
-    return preworkout.exercises.filter((e) => e.status === WORKOUT_STATUS.COMPLETED).length
-  }, [preworkout?.exercises])
+  useEffect(() => {
+    if (preworkout) {
+      workoutStore.initWorkout(preworkout)
+    }
+  }, [preworkout])
 
-  const totalExercises = preworkout?.exercises?.length ?? 0
-  const progress = totalExercises > 0 ? completedCount / totalExercises : 0
+  const isInProgress = workoutStore.status === WORKOUT_STATUS.IN_PROGRESS
+  const completedExerciseCount = workoutStore.exercises.filter(
+    (e) => e.status === WORKOUT_STATUS.COMPLETED,
+  ).length
+  const totalExercises = workoutStore.exercises.length
+  const isWorkoutCompleted = totalExercises > 0 && completedExerciseCount === totalExercises
 
   const muscleGroupLabel = preworkout?.muscleGroup
     ? t(`HOME.MUSCLE_GROUPS.${preworkout.muscleGroup}`)
@@ -46,9 +50,9 @@ export default function PreworkoutScreen() {
   const startWorkout = useCallback(async () => {
     try {
       setStarting(true)
-      const data = await postWorkoutStart(sessionId, effectiveRestTime)
+      const data = await postWorkoutStart(sessionId, workoutStore.restTime ?? 90)
       setSessionExercises(data.sessionExercises)
-      updateStatus(WORKOUT_STATUS.IN_PROGRESS)
+      workoutStore.updateSessionStatus(WORKOUT_STATUS.IN_PROGRESS)
       return data
     } catch (err) {
       console.log('Error starting workout:', err)
@@ -56,7 +60,7 @@ export default function PreworkoutScreen() {
     } finally {
       setStarting(false)
     }
-  }, [sessionId, effectiveRestTime, updateStatus])
+  }, [sessionId, workoutStore.restTime, workoutStore.updateSessionStatus])
 
   const navigateToExercise = useCallback((exerciseId) => {
     router.push({
@@ -66,8 +70,13 @@ export default function PreworkoutScreen() {
   }, [router, sessionId])
 
   const handleStartPress = useCallback(async () => {
+    if (isWorkoutCompleted) {
+      router.push(ROUTES_NAMES.HOME)
+      return
+    }
+
     if (isInProgress) {
-      const nextExercise = preworkout.exercises.find(
+      const nextExercise = workoutStore.exercises.find(
         (e) => e.status !== WORKOUT_STATUS.COMPLETED,
       )
       if (nextExercise) navigateToExercise(nextExercise.exerciseId)
@@ -76,12 +85,12 @@ export default function PreworkoutScreen() {
 
     const data = await startWorkout()
     if (data) {
-      const nextExercise = preworkout.exercises.find(
+      const nextExercise = workoutStore.exercises.find(
         (e) => e.status !== WORKOUT_STATUS.COMPLETED,
       )
       if (nextExercise) navigateToExercise(nextExercise.exerciseId)
     }
-  }, [isInProgress, preworkout, startWorkout, navigateToExercise])
+  }, [isWorkoutCompleted, isInProgress, workoutStore.exercises, startWorkout, navigateToExercise, router])
 
   const handleExercisePress = useCallback(async (exerciseId) => {
     if (isInProgress) {
@@ -134,8 +143,8 @@ export default function PreworkoutScreen() {
             color={colors.whiteLight}
           />
         </View>
-        <ProgressBar progress={progress} />
-        <RestStepper value={effectiveRestTime} onChange={setRestTime} />
+        <ProgressBar progress={workoutStore.workoutProgress()} />
+        <RestStepper value={workoutStore.restTime ?? 90} onChange={workoutStore.updateRestTime} />
         <View style={styles.exercisesContainer}>
           <View style={styles.exercisesHeader}>
             <CustomText
@@ -145,14 +154,14 @@ export default function PreworkoutScreen() {
               color={colors.white}
             />
             <CustomText
-              text={`${completedCount}/${totalExercises}`}
+              text={`${completedExerciseCount}/${totalExercises}`}
               fontWeight={600}
               fontSize={16}
               color={colors.whiteLight}
             />
           </View>
           <View style={styles.exerciseList}>
-            {preworkout.exercises.map((exercise) => (
+            {workoutStore.exercises.map((exercise) => (
               <ExerciseCard
                 key={exercise.exerciseId}
                 name={exercise.name}
@@ -166,7 +175,9 @@ export default function PreworkoutScreen() {
         </View>
         <Button
           text={
-            isInProgress
+            isWorkoutCompleted
+              ? t('COMMON.CLOSE')
+              : isInProgress
               ? t('PREWORKOUT.CONTINUE_ROUTINE')
               : t('PREWORKOUT.START_ROUTINE')
           }

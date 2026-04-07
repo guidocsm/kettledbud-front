@@ -36,7 +36,7 @@ export default function ExerciseCard({ name, image, sets, status = WORKOUT_STATU
     if (status === WORKOUT_STATUS.COMPLETED) {
       return (
         <View style={styles.checkCircle}>
-          <CheckIcon width={24} height={24} />
+          <CheckIcon width={22} height={22} />
         </View>
       )
     }
@@ -134,9 +134,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 30,
+    height: 30,
+    borderRadius: 50,
     backgroundColor: colors.success,
     alignItems: 'center',
     justifyContent: 'center',
