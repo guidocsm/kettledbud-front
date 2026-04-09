@@ -5,6 +5,7 @@ import { WORKOUT_STATUS } from '@/src/features/workout/utils/constants'
 const initialState = {
   sessionId: null,
   status: null,
+  startedAt: null,
   routineName: null,
   muscleGroup: null,
   restTime: null,
@@ -36,6 +37,7 @@ const useWorkoutStore = create((set, get) => ({
     set({
       sessionId: workoutData.sessionId,
       status: workoutData.status,
+      startedAt: workoutData.startedAt ?? null,
       routineName: workoutData.routineName,
       muscleGroup: workoutData.muscleGroup,
       restTime: workoutData.restTime,

@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { Animated, Easing, Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Animated, Easing, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Circle } from 'react-native-svg'
 
 import { BackIcon } from '@/assets/Icons'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
@@ -17,6 +18,7 @@ import useWorkoutStore from '@/src/stores/useWorkoutStore'
 import ProgressBar from './ProgressBar'
 import { usePulseAnimation } from '../hooks/usePulseAnimation'
 import { WORKOUT_STATUS } from '../utils/constants'
+import { formatTime } from '@/src/constants/formatTime'
 
 const TIMER_SIZE = 380
 const TIMER_STROKE_WIDTH = 18
@@ -24,12 +26,6 @@ const TIMER_RADIUS = (TIMER_SIZE / 2) - TIMER_STROKE_WIDTH
 const CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
-
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-}
 
 export default function RestModal() {
   const { t } = useTranslation()
@@ -127,22 +123,15 @@ export default function RestModal() {
               />
             </TouchableOpacity>
           </View>
-
           <ProgressBar progress={workoutStore.workoutProgress()} />
-
           <View style={styles.mascotRow}>
-            <Image
-              source={require('@/assets/images/kettlebud-logo.png')}
-              style={styles.mascot}
-              resizeMode="contain"
-            />
+            <Mascot style={styles.mascot} />
             <TypewriterBubble arrowDirection="left" width={240}>
               <CustomText fontWeight={500} fontSize={16} color={colors.dark}>
                 {message}
               </CustomText>
             </TypewriterBubble>
           </View>
-
           <Animated.View style={[styles.timerContainer, { opacity: pulseOpacity }]}>
             <Svg width={TIMER_SIZE} height={TIMER_SIZE}>
               <Circle

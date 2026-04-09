@@ -1,4 +1,5 @@
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
+import Mascot from '@/src/components/Mascot'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import apiClient from '@/src/services/apiClient'
@@ -10,7 +11,6 @@ import {
   Animated,
   Dimensions,
   Easing,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -355,10 +355,9 @@ export default function PreparingPlan({
           },
         ]}
       >
-        <Image
+        <Mascot
           source={mascotSource}
           style={{ width: mascotWidth, height: mascotHeight }}
-          resizeMode="contain"
         />
         {isComplete && <CelebrationSparkles />}
       </Animated.View>

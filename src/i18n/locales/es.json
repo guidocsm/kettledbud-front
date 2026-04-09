@@ -107,6 +107,10 @@
   "CONSTANTS": {
     "MINUTES": "minutos"
   },
+  "ALERT_MODAL": {
+    "DEFAULT_TITLE": "Confirmación necesaria",
+    "CANCEL": "Cancelar"
+  },
   "EXERCISE_ACTIVE": {
     "BACK_TO_HUB": "Volver al hub",
     "SERIES": "Series",
@@ -117,6 +121,9 @@
     "KG_PLACEHOLDER": "kg",
     "REPS_PLACEHOLDER": "reps",
     "COMPLETE_EXERCISE": "Completar ejercicio",
+    "CONFIRM_COMPLETE_TITLE": "¿Terminar ejercicio?",
+    "CONFIRM_COMPLETE_DESCRIPTION": "Tienes series sin completar. Las series que no hayas registrado no se guardarán.",
+    "CONFIRM_COMPLETE_PRIMARY": "Sí, terminar",
     "NEXT_EXERCISE": "Siguiente ejercicio",
     "FILL_ALL_DATA": "Anota todos tus datos antes de continuar"
   },

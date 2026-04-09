@@ -3,6 +3,7 @@ import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import { CustomModal } from '@/src/components/CustomModal'
 import CustomText from '@/src/components/CustomText'
 import { FormField } from '@/src/components/FormField'
+import Mascot from '@/src/components/Mascot'
 import { colors } from '@/src/constants/theme'
 import { useSignIn } from '@/src/hooks/useSignIn'
 import { signUpValidations } from '@/validations/auth/signUpValidations'
@@ -37,11 +38,7 @@ export default function SignUp({ visible = false, onClose }) {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image
-              source={require('@/assets/images/kettlebud-logo.png')}
-              style={styles.mascotImage}
-              resizeMode="contain"
-            />
+            <Mascot style={styles.mascotImage} />
             <Image
               source={require('@/assets/images/kettlebud.png')}
               style={styles.logoImage}

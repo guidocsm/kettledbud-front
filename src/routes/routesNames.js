@@ -2,6 +2,7 @@ export const ROUTES_NAMES = {
   LOGIN: '/auth/login',
   AUTH: '/auth',
   AUTH_CALLBACK: '/auth/callback',
+  TABS: '/(tabs)',
   HOME: '/(tabs)',
   INIT: '/init',
   ONBOARDING: '/onboarding',

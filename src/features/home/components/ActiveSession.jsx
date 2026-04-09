@@ -1,12 +1,12 @@
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { CheckIcon, PlayIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { colors } from '@/src/constants/theme'
 import { useTranslation } from 'react-i18next'
 
 export function ActiveSession({ nextSession, onPress, isWorkoutCompleted = false }) {
-  console.log('isWorkoutCompleted', isWorkoutCompleted);
   const { t } = useTranslation()
 
   return (
@@ -18,13 +18,13 @@ export function ActiveSession({ nextSession, onPress, isWorkoutCompleted = false
       >
         <View style={styles.lightBorder}>
           {isWorkoutCompleted ? (
-            <CheckIcon width={20} height={20} color={colors.mainBackground} />
+            <CheckIcon width={32} height={32} color={colors.mainBackground} />
           ) : (
             <PlayIcon />
           )}
         </View>
       </TouchableOpacity>
-      <Image source={require('@/assets/images/kettlebud-logo.png')} style={styles.mascot} resizeMode="contain" />
+      <Mascot style={styles.mascot} />
       <View style={styles.labelsContainer}>
         <CustomText
           text={t('HOME.TODAY_LABEL')}

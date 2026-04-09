@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { BackButton } from '@/src/components/BackButton'
 import { Button } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { colors } from '@/src/constants/theme'
 import { renderTranslation } from '@/src/i18n/translationComponents'
@@ -28,13 +29,7 @@ export default function OnboardingBridgeScreen() {
             {renderTranslation(t('ONBOARDING.BRIDGE.DESCRIPTION'))}
           </CustomText>
         </TypewriterBubble>
-        <Image
-          source={require('../../../../assets/images/kettlebud-logo.png')}
-          style={styles.mascot}
-          resizeMode="contain"
-          width={182}
-          height={117}
-        />
+        <Mascot style={styles.mascot} />
       </View>
       <Button
         text={t('COMMON.CONTINUE')}
@@ -52,5 +47,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
+  },
+  mascot: {
+    width: 182,
+    height: 117,
   },
 })

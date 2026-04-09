@@ -1,18 +1,16 @@
-import { useRouter } from 'expo-router'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
-import { BackIcon } from '../../assets/Icons'
-import { colors } from '../constants/theme'
+import { BackIcon } from '@/assets/Icons'
+import { colors } from '@/src/constants/theme'
+import { useBackButton } from '@/src/hooks/useBackButton'
 
-import CustomText from './CustomText'
-
-export function BackButton({ style }) {
-  const router = useRouter()
+export function BackButton({ route = '' }) {
+  const { handleBackPress } = useBackButton(route)
 
   return (
     <TouchableOpacity
-      style={[styles.button, style]}
-      onPress={() => router.back()}
+      style={styles.button}
+      onPress={handleBackPress}
       activeOpacity={0.7}
     >
       <BackIcon width={22} height={22} color={colors.main} />

@@ -1,6 +1,7 @@
-import { Image, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { colors } from '@/src/constants/theme'
 
 /**
@@ -12,11 +13,7 @@ export default function ExerciseTips({ tips }) {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('@/assets/images/kettlebud-logo.png')}
-        style={styles.mascot}
-        resizeMode="contain"
-      />
+      <Mascot style={styles.mascot} />
       <View style={styles.tipsList}>
         {tips.map((tip, index) => (
           <View key={index} style={styles.tipRow}>

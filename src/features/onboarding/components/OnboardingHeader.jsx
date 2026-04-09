@@ -1,8 +1,9 @@
 import { usePathname } from 'expo-router'
-import { StyleSheet, View , Image } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { BackButton } from '@/src/components/BackButton'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { colors } from '@/src/constants/theme'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
@@ -26,13 +27,7 @@ export function OnboardingHeader() {
         totalSteps={TOTAL_STEPS}
       />
       <View style={styles.mascotSpeechContainer}>
-        <Image
-          source={require('@/assets/images/kettlebud-logo.png')}
-          style={styles.mascot}
-          resizeMode="contain"
-          width={80}
-          height={80}
-        />
+        <Mascot style={styles.mascot} />
         <TypewriterBubble
           arrowDirection="left"
           animated={!wasFilled}

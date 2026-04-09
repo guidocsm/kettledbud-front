@@ -72,7 +72,7 @@ export default function SetRow({
         ) : (
           <View style={styles.inputReadonly}>
             <CustomText
-              text={isCompleted ? (weight || '—') : t('EXERCISE_ACTIVE.KG_PLACEHOLDER')}
+              text={isCompleted ? (weight || '-') : t('EXERCISE_ACTIVE.KG_PLACEHOLDER')}
               fontWeight={400}
               fontSize={13}
               color={isCompleted ? colors.whiteLight : colors.gray}
@@ -91,7 +91,7 @@ export default function SetRow({
         ) : (
           <View style={styles.inputReadonly}>
             <CustomText
-              text={isCompleted ? (reps || '—') : t('EXERCISE_ACTIVE.REPS_PLACEHOLDER')}
+              text={isCompleted ? (reps || '-') : t('EXERCISE_ACTIVE.REPS_PLACEHOLDER')}
               fontWeight={400}
               fontSize={13}
               color={isCompleted ? colors.whiteLight : colors.gray}

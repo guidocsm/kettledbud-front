@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { BackButton } from '@/src/components/BackButton'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { TypewriterBubble } from '@/src/components/TypewriterBubble'
 import { colors } from '@/src/constants/theme'
 import { useOnboarding } from '@/src/contexts/OnboardingContext'
@@ -35,11 +36,7 @@ export function WelcomeScreen() {
             {t('WELCOME.DURATION')}
           </CustomText>
         </TypewriterBubble>
-        <Image
-          source={require('@/assets/images/kettlebud-logo.png')}
-          style={styles.mascot}
-          resizeMode="contain"
-        />
+        <Mascot style={styles.mascot} />
       </View>
       <Button
         text={t('COMMON.GO')}

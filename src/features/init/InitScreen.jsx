@@ -4,6 +4,7 @@ import { Image, StyleSheet, View } from 'react-native'
 
 import { Button } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
@@ -14,7 +15,7 @@ function InitScreen() {
 
   return (
     <PageWrapper style={styles.container}>
-      <Image source={require('@/assets/images/kettlebud-logo.png')} />
+      <Mascot />
       <Image source={require('@/assets/images/kettlebud.png')} />
       <CustomText
         text={t('INIT.SUBTITLE')}

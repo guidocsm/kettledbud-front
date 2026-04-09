@@ -4,12 +4,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import { BackIcon, DumbbellIcon, PauseIcon, PlayIcon } from '@/assets/Icons'
+import { DumbbellIcon, PauseIcon, PlayIcon } from '@/assets/Icons'
+import AlertModal from '@/src/components/AlertModal'
+import { BackButton } from '@/src/components/BackButton'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import Loading from '@/src/components/Loading'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
+import { useElapsedTime } from '@/src/hooks/useElapsedTime'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
+import { patchExerciseComplete } from '@/src/services/workout/patchExerciseComplete'
 import { patchWorkoutSet } from '@/src/services/workout/patchWorkoutSet'
 import useRestTimerStore from '@/src/stores/useRestTimerStore'
 import useWorkoutStore from '@/src/stores/useWorkoutStore'
@@ -24,11 +29,13 @@ export default function ExerciseActiveScreen() {
   const { sessionId, exerciseId } = useLocalSearchParams()
   const { t } = useTranslation()
   const router = useRouter()
+  const elapsedTime = useElapsedTime()
 
   const { exerciseDetail, loading } = useGetExerciseDetail(sessionId, exerciseId)
   const [localSets, setLocalSets] = useState([])
   const [savingSetIndex, setSavingSetIndex] = useState(-1)
-  const [exerciseIsCompleted, setExerciseIsCompleted] = useState(false)
+  const [savingExerciseComplete, setSavingExerciseComplete] = useState(false)
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false)
   const videoRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(true)
 
@@ -53,13 +60,11 @@ export default function ExerciseActiveScreen() {
     }
   }, [exerciseDetail])
 
-  const activeSetIndex = useMemo(
-    () => localSets.findIndex((s) => !s.isCompleted),
-    [localSets],
-  )
-  const currentExerciseIndex = useMemo(
-    () => workoutStore.exercises.findIndex((e) => e.exerciseId === parseInt(exerciseId)),
-    [workoutStore.exercises, exerciseId],
+  const activeSetIndex = useMemo(() => {
+    if (exerciseDetail?.status === WORKOUT_STATUS.COMPLETED) return -1
+    return localSets.findIndex((s) => !s.isCompleted)
+  },
+    [localSets, exerciseDetail?.status],
   )
   const currentExerciseStatus = useMemo(
     () => workoutStore.exercises.find((e) => e.exerciseId === parseInt(exerciseId))?.status,
@@ -71,11 +76,11 @@ export default function ExerciseActiveScreen() {
     ),
     [workoutStore.exercises, exerciseId],
   )
-  const isSetEntryLocked = (
-    currentExerciseStatus === WORKOUT_STATUS.PENDING
-    && hasOtherExerciseInProgress
-  )
-  const isLastExercise = currentExerciseIndex === workoutStore.exercises.length - 1
+
+  const hasCompletedAtLeastOneSet = useMemo(() => localSets.some((s) => s.isCompleted), [localSets])
+  const hasPendingSets = useMemo(() => localSets.some((s) => !s.isCompleted), [localSets])
+  const isExerciseCompleted = useMemo(() => currentExerciseStatus === WORKOUT_STATUS.COMPLETED, [currentExerciseStatus])
+  const isSetEntryLocked = useMemo(() => currentExerciseStatus === WORKOUT_STATUS.PENDING && hasOtherExerciseInProgress, [currentExerciseStatus, hasOtherExerciseInProgress])
 
   const handleSetChange = useCallback((index, field, value) => {
     setLocalSets((prev) =>
@@ -106,7 +111,11 @@ export default function ExerciseActiveScreen() {
 
       if (result.exerciseCompleted || nextSets.every((s) => s.isCompleted)) {
         workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.COMPLETED)
-        setExerciseIsCompleted(true)
+
+        if (result?.sessionCompleted) {
+          router.replace('/')
+          return
+        }
       } else {
         workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.IN_PROGRESS)
       }
@@ -127,44 +136,78 @@ export default function ExerciseActiveScreen() {
     setIsPlaying((prev) => !prev)
   }, [isPlaying])
 
-  const handleCompleteExercise = useCallback(() => {
-    if (isLastExercise) {
-      router.push({
+  const completeExercise = useCallback(async () => {
+    if (!exerciseDetail?.sessionExerciseId) return
+
+    try {
+      setSavingExerciseComplete(true)
+      const result = await patchExerciseComplete(exerciseDetail.sessionExerciseId)
+      workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.COMPLETED)
+
+      if (result?.sessionCompleted) {
+        router.replace('/')
+        return
+      }
+
+      router.replace({
         pathname: ROUTES_NAMES.PREWORKOUT,
         params: { sessionId },
       })
+    } catch (err) {
+      console.log('Error completing exercise:', err)
+    } finally {
+      setSavingExerciseComplete(false)
+    }
+  }, [router, sessionId, exerciseId, exerciseDetail?.sessionExerciseId])
+
+  const handleCompleteExercise = useCallback(async () => {
+    if (hasPendingSets) {
+      setIsConfirmModalVisible(true)
       return
     }
 
-    const nextExercise = workoutStore.exercises[currentExerciseIndex + 1]
-    if (!nextExercise) return
+    await completeExercise()
+  }, [hasPendingSets, completeExercise])
 
-    router.push({
-      pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
-      params: { sessionId, exerciseId: nextExercise.exerciseId },
-    })
-  }, [router, sessionId, isLastExercise, workoutStore.exercises, currentExerciseIndex])
+  const handleConfirmCompleteExercise = useCallback(async () => {
+    setIsConfirmModalVisible(false)
+    await completeExercise()
+  }, [completeExercise])
 
-  if (loading || !exerciseDetail) return null
+  const workoutProgress = useMemo(
+    () => workoutStore.workoutProgress(),
+    [workoutStore.completedSets, workoutStore.totalSets],
+  )
+  const preworkoutRoute = useMemo(
+    () => (sessionId ? `${ROUTES_NAMES.PREWORKOUT}?sessionId=${sessionId}` : ROUTES_NAMES.PREWORKOUT),
+    [sessionId],
+  )
 
+  if (loading || !exerciseDetail) return <Loading />
+  
   return (
     <View style={styles.screen}>
       <PageWrapper style={styles.container} isScrollView>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <BackIcon width={22} height={22} color={colors.main} />
-          </TouchableOpacity>
-          <CustomText
-            text={t('EXERCISE_ACTIVE.BACK_TO_HUB')}
-            fontWeight={500}
-            fontSize={18}
-            color={colors.white}
-          />
+          <View style={styles.headerLeft}>
+            <BackButton route={preworkoutRoute} />
+            <CustomText
+              text={t('EXERCISE_ACTIVE.BACK_TO_HUB')}
+              fontWeight={500}
+              fontSize={18}
+              color={colors.white}
+            />
+          </View>
+          {elapsedTime ? (
+            <CustomText
+              text={elapsedTime}
+              fontWeight={600}
+              fontSize={18}
+              color={colors.main}
+            />
+          ) : null}
         </View>
-        <ProgressBar progress={workoutStore.workoutProgress()} />
+        <ProgressBar progress={workoutProgress} />
         <View style={styles.exerciseNameRow}>
           <CustomText
             text={exerciseDetail.name}
@@ -230,14 +273,26 @@ export default function ExerciseActiveScreen() {
             onSetChange={handleSetChange}
           />
         </View>
-        {exerciseIsCompleted && (
+        {!isExerciseCompleted && (
           <Button
-            text={t(isLastExercise ? 'COMMON.CLOSE' : 'EXERCISE_ACTIVE.NEXT_EXERCISE')}
-            type={BUTTON_TYPES.MAIN}
+            text={t('EXERCISE_ACTIVE.COMPLETE_EXERCISE')}
+            type={
+              hasCompletedAtLeastOneSet && !savingExerciseComplete
+                ? BUTTON_TYPES.MAIN
+                : BUTTON_TYPES.DISABLED
+            }
             onPress={handleCompleteExercise}
           />
         )}
       </PageWrapper>
+      <AlertModal
+        visible={isConfirmModalVisible}
+        description={t('EXERCISE_ACTIVE.CONFIRM_COMPLETE_DESCRIPTION')}
+        primaryButtonText={t('EXERCISE_ACTIVE.COMPLETE_EXERCISE')}
+        onPrimaryPress={handleConfirmCompleteExercise}
+        onSecondaryPress={() => setIsConfirmModalVisible(false)}
+        onClose={() => setIsConfirmModalVisible(false)}
+      />
     </View>
   )
 }
@@ -253,17 +308,13 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerLeft: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: colors.main,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   exerciseNameRow: {
     flexDirection: 'row',

@@ -1,5 +1,6 @@
 import { CustomModal } from '@/src/components/CustomModal'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { colors } from '@/src/constants/theme'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -12,11 +13,7 @@ export default function SentEmail({ visible = false, onClose }) {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image
-              source={require('@/assets/images/kettlebud-logo.png')}
-              style={styles.mascotImage}
-              resizeMode="contain"
-            />
+            <Mascot style={styles.mascotImage} />
             <Image
               source={require('@/assets/images/kettlebud.png')}
               style={styles.logoImage}

@@ -1,13 +1,16 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { BackIcon, ClockIcon, GoalIcon } from '@/assets/Icons'
+import { ClockIcon, GoalIcon } from '@/assets/Icons'
+import { BackButton } from '@/src/components/BackButton'
 import { Button, BUTTON_TYPES } from '@/src/components/Button'
 import CustomText from '@/src/components/CustomText'
+import Loading from '@/src/components/Loading'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
+import { useElapsedTime } from '@/src/hooks/useElapsedTime'
 import { postWorkoutStart } from '@/src/services/workout/workoutStart'
 import useWorkoutStore from '@/src/stores/useWorkoutStore'
 
@@ -25,6 +28,7 @@ export default function PreworkoutScreen() {
   const { sessionId } = useLocalSearchParams()
   const { t } = useTranslation()
   const router = useRouter()
+  const elapsedTime = useElapsedTime()
 
   const { preworkout, loading } = useGetPreworkout(sessionId)
 
@@ -36,14 +40,30 @@ export default function PreworkoutScreen() {
     }
   }, [preworkout])
 
-  const hasStartedWorkout = workoutStore.exercises.some(
-    (e) => e.status === WORKOUT_STATUS.IN_PROGRESS || e.status === WORKOUT_STATUS.COMPLETED,
+  const hasStartedWorkout = useMemo(
+    () => {
+      if (Boolean(workoutStore.startedAt)) return true
+      if (workoutStore.status === WORKOUT_STATUS.IN_PROGRESS) return true
+
+      return workoutStore.exercises.some(
+        (e) => e.status === WORKOUT_STATUS.IN_PROGRESS || e.status === WORKOUT_STATUS.COMPLETED,
+      )
+    },
+    [workoutStore.startedAt, workoutStore.status, workoutStore.exercises],
   )
-  const completedExerciseCount = workoutStore.exercises.filter(
-    (e) => e.status === WORKOUT_STATUS.COMPLETED,
-  ).length
-  const totalExercises = workoutStore.exercises.length
-  const isWorkoutCompleted = totalExercises > 0 && completedExerciseCount === totalExercises
+  
+  const completedExerciseCount = useMemo(
+    () => workoutStore.exercises.filter(
+      (e) => e.status === WORKOUT_STATUS.COMPLETED,
+    ).length,
+    [workoutStore.exercises],
+  )
+
+  const totalExercises = useMemo(() => workoutStore.exercises.length, [workoutStore.exercises])
+  const isWorkoutCompleted = useMemo(
+    () => totalExercises > 0 && completedExerciseCount === totalExercises,
+    [totalExercises, completedExerciseCount],
+  )
 
   const muscleGroupLabel = preworkout?.muscleGroup
     ? t(`HOME.MUSCLE_GROUPS.${preworkout.muscleGroup}`)
@@ -104,24 +124,34 @@ export default function PreworkoutScreen() {
     if (data) navigateToExercise(exerciseId)
   }, [hasStartedWorkout, startWorkout, navigateToExercise])
 
-  if (loading || !preworkout) return null
+  const workoutProgress = useMemo(
+    () => workoutStore.workoutProgress(),
+    [workoutStore.completedSets, workoutStore.totalSets],
+  )
+
+  if (loading || !preworkout) return <Loading />
 
   return (
     <View style={styles.screen}>
       <PageWrapper style={styles.container} isScrollView>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <BackIcon width={20} height={20} color={colors.main} />
-          </TouchableOpacity>
-          <CustomText
-            text={preworkout.routineName}
-            fontWeight={700}
-            fontSize={22}
-            color={colors.white}
-          />
+          <View style={styles.headerLeft}>
+            <BackButton route={ROUTES_NAMES.TABS} />
+            <CustomText
+              text={preworkout.routineName}
+              fontWeight={700}
+              fontSize={22}
+              color={colors.white}
+            />
+          </View>
+          {elapsedTime ? (
+            <CustomText
+              text={elapsedTime}
+              fontWeight={600}
+              fontSize={18}
+              color={colors.main}
+            />
+          ) : null}
         </View>
         <View style={styles.subtitle}>
           <GoalIcon width={20} height={20} color={colors.whiteLight} />
@@ -145,7 +175,7 @@ export default function PreworkoutScreen() {
             color={colors.whiteLight}
           />
         </View>
-        <ProgressBar progress={workoutStore.workoutProgress()} />
+        <ProgressBar progress={workoutProgress} />
         <RestStepper value={workoutStore.restTime ?? 90} onChange={workoutStore.updateRestTime} />
         <View style={styles.exercisesContainer}>
           <View style={styles.exercisesHeader}>
@@ -203,17 +233,13 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerLeft: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: colors.main,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   subtitle: {
     flexDirection: 'row',

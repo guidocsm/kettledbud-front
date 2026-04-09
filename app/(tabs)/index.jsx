@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native'
 
 import { BurnIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
+import Loading from '@/src/components/Loading'
 import PageWrapper from '@/src/components/PageWrapper'
 import { colors } from '@/src/constants/theme'
 import SessionPath from '@/src/features/home/components/SessionPath'
@@ -16,7 +17,7 @@ export default function Home() {
   const { t } = useTranslation()
   const router = useRouter()
 
-  const sessionsHistory = useGetSessionsHistory()
+  const { sessionsHistory, loading } = useGetSessionsHistory()
   const currentWeekNumber = sessionsHistory?.weekNumber ?? 0
   const totalWeeks = sessionsHistory?.totalWeeks ?? 0
 
@@ -40,6 +41,8 @@ export default function Home() {
       router.push({ pathname: ROUTES_NAMES.PREWORKOUT, params: { sessionId } })
     }
   }
+
+  if (loading) return <Loading isModal />
 
   return (
     <View style={styles.screen}>

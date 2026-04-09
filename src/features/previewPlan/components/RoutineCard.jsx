@@ -1,12 +1,12 @@
 import { ChevronIcon, LockIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { colors } from '@/src/constants/theme'
 import { BlurView } from 'expo-blur'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Animated,
-  Image,
   LayoutAnimation,
   Pressable,
   StyleSheet,
@@ -134,11 +134,7 @@ export function RoutineCard({ routine }) {
             ))}
             {hasLockedExercises && (
               <View style={styles.kettlebiContainer}>
-                <Image
-                  source={require('@/assets/images/kettlebud-logo.png')}
-                  style={styles.kettlebiImage}
-                  resizeMode="contain"
-                />
+                <Mascot style={styles.kettlebiImage} />
                 <CustomText
                   text={t('PREVIEW_PLAN.WEEKLY_PLAN.LOCKED_MESSAGE')}
                   color={colors.main}

@@ -1,11 +1,12 @@
 import { useRouter, useSegments } from 'expo-router'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { ChevronIcon, ClockIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
+import Mascot from '@/src/components/Mascot'
 import { colors } from '@/src/constants/theme'
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
 import useRestTimerStore from '@/src/stores/useRestTimerStore'
@@ -13,14 +14,9 @@ import useWorkoutStore from '@/src/stores/useWorkoutStore'
 
 import { usePulseAnimation } from '../hooks/usePulseAnimation'
 import { WORKOUT_STATUS } from '../utils/constants'
+import { formatTime } from '@/src/constants/formatTime'
 
 const TAB_BAR_HEIGHT = 90
-
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-}
 
 export default function RestTimerWidget() {
   const { t } = useTranslation()
@@ -58,12 +54,12 @@ export default function RestTimerWidget() {
     restTimerStore.dismissFinished()
 
     if (isExerciseCompleted) {
-      router.push({
+      router.replace({
         pathname: ROUTES_NAMES.PREWORKOUT,
         params: { sessionId: workoutStore.sessionId },
       })
     } else {
-      router.push({
+      router.replace({
         pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
         params: {
           sessionId: workoutStore.sessionId,
@@ -83,11 +79,7 @@ export default function RestTimerWidget() {
         >
           <View style={styles.content}>
             <View style={styles.left}>
-              <Image
-                source={require('@/assets/images/kettlebud-logo.png')}
-                style={styles.mascot}
-                resizeMode="contain"
-              />
+              <Mascot style={styles.mascot} />
               <CustomText
                 text={t(isExerciseCompleted ? 'REST.READY_NEXT_EXERCISE' : 'REST.READY_NEXT_SET')}
                 fontWeight={700}
@@ -128,7 +120,10 @@ export default function RestTimerWidget() {
             <ChevronIcon width={28} height={28} color={colors.main} direction="right" />
           </View>
         </View>
-        <Animated.View pointerEvents="none" style={[styles.flashOverlay, { opacity: flashOverlayOpacity }]} />
+        <Animated.View 
+          pointerEvents="none" 
+          style={[styles.flashOverlay, { opacity: flashOverlayOpacity }]} 
+        />
       </TouchableOpacity>
     </View>
   )
