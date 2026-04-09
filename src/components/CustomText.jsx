@@ -16,6 +16,8 @@ const CustomText = ({
   extraStyle = {},
   textAlign = 'left',
   lineHeight = null,
+  numberOfLines,
+  ellipsizeMode,
 }) => {
   const style = {
     fontFamily: getFontFamily(fontFamily, fontWeight),
@@ -27,7 +29,15 @@ const CustomText = ({
     ...extraStyle,
   }
 
-  return <Text style={style}>{children ?? text ?? ''}</Text>
+  return (
+    <Text
+      style={style}
+      numberOfLines={numberOfLines}
+      ellipsizeMode={ellipsizeMode}
+    >
+      {children ?? text ?? ''}
+    </Text>
+  )
 }
 
 export default CustomText

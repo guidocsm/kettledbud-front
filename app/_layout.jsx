@@ -5,6 +5,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-cont
 
 import RestModal from '@/src/features/workout/components/RestModal'
 import RestTimerWidget from '@/src/features/workout/components/RestTimerWidget'
+import WorkoutCompletedModal from '@/src/features/workout/components/WorkoutCompletedModal'
 import { useAppFonts } from '@/src/hooks/useAppFonts'
 
 import { ROUTES_NAMES } from '@/src/routes/routesNames'
@@ -47,6 +48,7 @@ export default function IndexLayout() {
       </Stack>
       <RestTimerWidget />
       <RestModal />
+      <WorkoutCompletedModal />
     </SafeAreaProvider>
   )
 }

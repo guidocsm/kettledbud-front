@@ -67,6 +67,10 @@ const styles = StyleSheet.create({
   },
   circleCompleted: {
     backgroundColor: '#34D399',
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 0,
   },
   circleMissed: {
     backgroundColor: colors.gray,

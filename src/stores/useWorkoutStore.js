@@ -13,6 +13,7 @@ const initialState = {
   completedSets: 0,
   totalSets: 0,
   currentExerciseId: null,
+  workoutSummary: null,
 }
 
 const useWorkoutStore = create((set, get) => ({
@@ -70,6 +71,10 @@ const useWorkoutStore = create((set, get) => ({
 
   updateSessionStatus: (newStatus) => {
     set({ status: newStatus })
+  },
+
+  setWorkoutSummary: (summary) => {
+    set({ workoutSummary: summary ?? null })
   },
 
   resetWorkout: () => {

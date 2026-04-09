@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { Animated, Easing, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -65,31 +65,68 @@ export default function RestModal() {
     }).start()
   }, [restTimerStore.timeRemaining, restTimerStore.isVisible])
 
-  useEffect(() => {
-    if (restTimerStore.isFinished && restTimerStore.isVisible) {
-      const exercise = workoutStore.exercises.find(
-        (e) => e.exerciseId === workoutStore.currentExerciseId,
-      )
-      const isExerciseCompleted = exercise?.status === WORKOUT_STATUS.COMPLETED
+  const navigateAfterRest = useCallback(() => {
+    if (workoutStore.workoutSummary) return
 
-      restTimerStore.dismissFinished()
+    const exercise = workoutStore.exercises.find(
+      (e) => e.exerciseId === workoutStore.currentExerciseId,
+    )
+    const isExerciseCompleted = exercise?.status === WORKOUT_STATUS.COMPLETED
 
-      if (isExerciseCompleted) {
-        router.push({
-          pathname: ROUTES_NAMES.PREWORKOUT,
-          params: { sessionId: workoutStore.sessionId },
-        })
-      } else {
-        router.push({
-          pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
-          params: {
-            sessionId: workoutStore.sessionId,
-            exerciseId: workoutStore.currentExerciseId,
-          },
-        })
-      }
+    if (isExerciseCompleted) {
+      router.replace({
+        pathname: ROUTES_NAMES.PREWORKOUT,
+        params: { sessionId: workoutStore.sessionId },
+      })
+      return
     }
-  }, [restTimerStore.isFinished])
+
+    router.replace({
+      pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
+      params: {
+        sessionId: workoutStore.sessionId,
+        exerciseId: String(workoutStore.currentExerciseId),
+      },
+    })
+  }, [
+    router,
+    workoutStore.workoutSummary,
+    workoutStore.exercises,
+    workoutStore.currentExerciseId,
+    workoutStore.sessionId,
+  ])
+
+  useEffect(() => {
+    if (!restTimerStore.isFinished || !restTimerStore.isVisible) return
+
+    restTimerStore.dismissFinished()
+    navigateAfterRest()
+  }, [restTimerStore.isFinished, restTimerStore.isVisible, navigateAfterRest])
+
+  const handleSkipRest = useCallback(() => {
+    const exercise = workoutStore.exercises.find(
+      (e) => e.exerciseId === workoutStore.currentExerciseId,
+    )
+    const isExerciseCompleted = exercise?.status === WORKOUT_STATUS.COMPLETED
+
+    restTimerStore.skipTimer()
+
+    if (workoutStore.workoutSummary) return
+
+    if (isExerciseCompleted) {
+      router.replace({
+        pathname: ROUTES_NAMES.PREWORKOUT,
+        params: { sessionId: workoutStore.sessionId },
+      })
+    }
+  }, [
+    router,
+    workoutStore.workoutSummary,
+    workoutStore.exercises,
+    workoutStore.currentExerciseId,
+    workoutStore.sessionId,
+    restTimerStore,
+  ])
 
   return (
     <Modal
@@ -177,7 +214,7 @@ export default function RestModal() {
           type={BUTTON_TYPES.OUTLINE}
           text={t('REST.SKIP')}
           textColor={colors.main}
-          onPress={restTimerStore.skipTimer}
+          onPress={handleSkipRest}
         />
       </View>
     </Modal>

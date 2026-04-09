@@ -107,6 +107,18 @@ export default function ExerciseActiveScreen() {
       )
       setLocalSets(nextSets)
       workoutStore.incrementCompletedSets()
+
+      if (result?.sessionCompleted && result?.summary) {
+        workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.COMPLETED)
+        workoutStore.setWorkoutSummary(result.summary)
+        return
+      }
+
+      if (result?.sessionCompleted) {
+        router.replace('/')
+        return
+      }
+
       restTimerStore.startTimer(workoutStore.restTime ?? 90)
 
       if (result.exerciseCompleted || nextSets.every((s) => s.isCompleted)) {
@@ -143,6 +155,11 @@ export default function ExerciseActiveScreen() {
       setSavingExerciseComplete(true)
       const result = await patchExerciseComplete(exerciseDetail.sessionExerciseId)
       workoutStore.updateExerciseStatus(parseInt(exerciseId), WORKOUT_STATUS.COMPLETED)
+
+      if (result?.sessionCompleted && result?.summary) {
+        workoutStore.setWorkoutSummary(result.summary)
+        return
+      }
 
       if (result?.sessionCompleted) {
         router.replace('/')

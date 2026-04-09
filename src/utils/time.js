@@ -15,3 +15,15 @@ export const formatElapsedTime = (elapsedMs) => {
 
   return `${seconds}s`
 }
+
+export const formatDurationMinutes = (minutesInput = 0) => {
+  const totalMinutes = Math.max(0, Math.floor(Number(minutesInput) || 0))
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+
+  if (hours >= 1) {
+    return `${hours}h ${minutes}min`
+  }
+
+  return `${minutes} min`
+}

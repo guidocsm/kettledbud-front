@@ -1,5 +1,4 @@
 import { useRouter, useSegments } from 'expo-router'
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -33,7 +32,6 @@ export default function RestTimerWidget() {
   })
 
   const isTabScreen = segments[0] === '(tabs)'
-  const isExerciseActiveScreen = segments[segments.length - 1] === 'exerciseActive'
   const bottomOffset = isTabScreen ? TAB_BAR_HEIGHT + 30 : (insets.bottom || 16)
 
   const exercise = workoutStore.exercises.find(
@@ -41,17 +39,13 @@ export default function RestTimerWidget() {
   )
   const isExerciseCompleted = exercise?.status === WORKOUT_STATUS.COMPLETED
 
-  useEffect(() => {
-    if (restTimerStore.isFinished && isExerciseActiveScreen) {
-      restTimerStore.dismissFinished()
-    }
-  }, [restTimerStore.isFinished, isExerciseActiveScreen])
-
   const shouldShow = (restTimerStore.isActive || restTimerStore.isFinished) && !restTimerStore.isVisible
   if (!shouldShow) return null
 
   const handleFinishedPress = () => {
     restTimerStore.dismissFinished()
+
+    if (workoutStore.workoutSummary) return
 
     if (isExerciseCompleted) {
       router.replace({
@@ -63,7 +57,7 @@ export default function RestTimerWidget() {
         pathname: ROUTES_NAMES.EXERCISE_ACTIVE,
         params: {
           sessionId: workoutStore.sessionId,
-          exerciseId: workoutStore.currentExerciseId,
+          exerciseId: String(workoutStore.currentExerciseId),
         },
       })
     }

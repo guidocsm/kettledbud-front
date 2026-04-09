@@ -1,5 +1,7 @@
-import { BurnIcon, CalendarIcon, ClockIcon, GoalIcon, IOSWatchIcon } from '@/assets/Icons'
+import { BurnIcon, CalendarIcon, GoalIcon, IOSWatchIcon } from '@/assets/Icons'
 import CustomText from '@/src/components/CustomText'
+import StatsSummaryCard from '@/src/components/StatsSummaryCard'
+import StatsSummaryItem from '@/src/components/StatsSummaryItem'
 import { colors } from '@/src/constants/theme'
 import { StyleSheet, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -35,61 +37,23 @@ export function SummaryUserPlan({ durationWeeks = null, daysPerWeek = null, time
           />
         </View>
       </LinearGradient>
-      <View style={styles.dataContainer}>
-        <View style={styles.dataItem}>
-          <View style={styles.goalIconContainer}>
-            <CalendarIcon color={colors.main} />
-          </View>
-          <CustomText 
-            text={durationWeeks} 
-            color={colors.white} 
-            fontWeight={600} 
-            fontSize={24} 
-          />
-          <CustomText 
-            text={t('PREVIEW_PLAN.WEEKS')} 
-            color={colors.whiteLight} 
-            fontWeight={500} 
-            fontSize={14} 
-          />
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.dataItem}>
-          <View style={styles.goalIconContainer}>
-            <BurnIcon color={colors.main} />
-          </View>
-          <CustomText 
-            text={daysPerWeek}
-            color={colors.white} 
-            fontWeight={600} 
-            fontSize={24} 
-          />
-          <CustomText 
-            text={t('PREVIEW_PLAN.DAYS_WEEKS')} 
-            color={colors.whiteLight} 
-            fontWeight={500} 
-            fontSize={14} 
-          />
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.dataItem}>
-          <View style={styles.goalIconContainer}>
-            <IOSWatchIcon color={colors.main} />
-          </View>
-          <CustomText 
-            text={timePerSession}
-            color={colors.white} 
-            fontWeight={600} 
-            fontSize={24} 
-          />
-          <CustomText 
-            text={t('PREVIEW_PLAN.MIN_SESSION')} 
-            color={colors.whiteLight} 
-            fontWeight={500} 
-            fontSize={14} 
-          />
-        </View>
-      </View>
+      <StatsSummaryCard>
+        <StatsSummaryItem
+          icon={<CalendarIcon color={colors.main} />}
+          value={durationWeeks}
+          label={t('PREVIEW_PLAN.WEEKS')}
+        />
+        <StatsSummaryItem
+          icon={<BurnIcon color={colors.main} />}
+          value={daysPerWeek}
+          label={t('PREVIEW_PLAN.DAYS_WEEKS')}
+        />
+        <StatsSummaryItem
+          icon={<IOSWatchIcon color={colors.main} />}
+          value={timePerSession}
+          label={t('PREVIEW_PLAN.MIN_SESSION')}
+        />
+      </StatsSummaryCard>
     </View>
   )
 }
@@ -117,26 +81,5 @@ const styles = StyleSheet.create({
   },
   goalTextContainer: {
     gap: 6,
-  },
-  dataContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: colors.main,
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  dataItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: colors.mainLight,
-    height: '100%',
-    width: 1,
   },
 })

@@ -149,6 +149,15 @@
     "CONTINUE_ROUTINE": "Continuar rutina",
     "SETS_INFO": "{{sets}} series"
   },
+  "WORKOUT_COMPLETED": {
+    "TITLE": "¡Workout completado!",
+    "SUBTITLE": "Cada sesión te acerca más a tu meta.\n¡Sigue así!",
+    "STATS": {
+      "EXERCISES": "Ejercicios completados",
+      "VOLUME": "Volumen total",
+      "DURATION": "Duración"
+    }
+  },
   "HOME": {
     "TODAY_LABEL": "HOY",
     "WEEK_TITLE": "Semana {{current}} de {{total}}",

@@ -69,7 +69,10 @@ const styles = StyleSheet.create({
   },
   completedCircle: {
     backgroundColor: colors.success,
-    shadowColor: colors.success,
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 0,
   },
   lightBorder: {
     width: 67,
