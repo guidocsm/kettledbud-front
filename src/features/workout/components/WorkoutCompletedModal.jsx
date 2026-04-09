@@ -1,7 +1,7 @@
 import { CheckIcon, DumbbellIcon, IOSWatchIcon } from '@/assets/Icons'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
-import { Animated, InteractionManager, Modal, StyleSheet, View } from 'react-native'
+import { Animated, Modal, StyleSheet, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/src/components/Button'
@@ -38,19 +38,17 @@ export default function WorkoutCompletedModal() {
   }, [isVisible])
 
   const handleClose = () => {
+    fadeAnim.setValue(0)
     router.replace(ROUTES_NAMES.HOME)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        InteractionManager.runAfterInteractions(() => {
-          resetWorkout()
-        })
-      })
-    })
+    setTimeout(() => {
+      resetWorkout()
+    }, 300)
   }
 
   return (
-    <Modal visible={isVisible} transparent animationType="none">
-      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+    <Modal visible={isVisible} transparent={false} animationType="none">
+      <View style={styles.backdrop}>
+        <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <Mascot style={styles.mascot} />
         <View style={styles.textContainer}>
           <CustomText
@@ -96,15 +94,19 @@ export default function WorkoutCompletedModal() {
           text={t('COMMON.CLOSE')}
           onPress={handleClose}
         />
-      </Animated.View>
+        </Animated.View>
+      </View>
     </Modal>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  backdrop: {
     flex: 1,
     backgroundColor: colors.mainBackground,
+  },
+  container: {
+    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 30,
